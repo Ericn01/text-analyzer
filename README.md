@@ -97,14 +97,4 @@ src/
 - **DOCX**: Microsoft Word document processing
 - **TXT**: Plain text file analysis
 
-## Roadmap
-
-- [ ] Batch document analysis
-- [ ] Export analysis results (PDF, CSV)
-- [ ] Document comparison features
-- [ ] Multi-language support
-- [ ] API rate limiting and authentication
-- [ ] Real-time collaborative analysis
-
-
 ---
