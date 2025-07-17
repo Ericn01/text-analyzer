@@ -1,4 +1,6 @@
-{
+import { TextAnalyticsResponse } from "./types/analyticsResponse";
+
+export const analyticsData : TextAnalyticsResponse = {
   "success": true,
   "timestamp": "2025-01-15T10:30:00Z",
   "processing_time_ms": 2340,

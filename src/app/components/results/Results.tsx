@@ -1,55 +1,69 @@
-import { promises as fs} from 'fs';
-import path from 'path';
-import { ReactElement } from 'react';
-import { AnalyticsSummary } from '../../types/basicAnalytics';
-import Error from 'next/error';
 
+import { ReactElement } from 'react';
+import Navigation from './Navigation';
+import ExecutiveSummary from './ExecutiveSummary';
+import { TextAnalyticsResponse } from '@/app/types/analyticsResponse';
+import ResultsHeader from './ResultsHeader';
+import BasicAnalytics from './BasicAnalytics';
+import { CircleQuestionMark } from 'lucide-react';
+import { analyticsData } from '@/app/exampleResponse';
+
+
+//import { getTextAnalysisData } from '@/app/lib/analyticsData';
 
 
 type SectionHeaderProps = {
     sectionName: string
 }
 
-const SectionHeader = ({ sectionName } : SectionHeaderProps) : ReactElement => {
+export const SectionHeader = ({ sectionName } : SectionHeaderProps) : ReactElement => {
     return (
-        <div className="flex justify-between align-center mb-5 pb-4 border-b-2-[#e0e6ed]">
-            <h2 className="text-2xl text-[#333] font-bold"> {sectionName} </h2>
+        <div className="flex justify-between align-center mb-5 pb-4 border-b-3 border-[#e0e6ed]">
+            <h2 className="text-[26px] text-[#333] font-bold"> {sectionName} </h2>
         </div>
     )
 }
 
-
-
-
-
-const BasicAnalytics =  () => {
-
-}
-
-const ResultsBody = () => {
+const ResultsBody = ({
+                    timestamp,
+                    document, 
+                    summary,
+                    basic_analytics,
+                    visual_analytics,
+                    advanced_features} : TextAnalyticsResponse) => {
+    const {overview, structure, readability} = basic_analytics;
+    const {word_frequency, word_length_distribution, sentence_length_trends, parts_of_speech} = visual_analytics;
+    const {} = advanced_features
     return (
         <article className="max-w-[1200px] mx-auto p-5">
-            <ResultsSidebar />
-
-            <div className="bg-white rounded-lg p-7 shadow-lg">
-                {/* Summary Section */}
-
-                {/* Basic Analytics (Accordion) */}
+            <div className="grid grid-cols-[250px_1fr] gap-6 my-auto">
+                <Navigation />
+                <div className="bg-white rounded-xl p-7 shadow-lg">
+                    <h1> Analysis completed at {new Date(timestamp).toLocaleDateString()}</h1>
+                    {/* Executive Summary Section */}
+                    <ExecutiveSummary document={document} summary={summary}/>
+                    {/* Basic Analytics (Accordion) */}
+                    <BasicAnalytics 
+                        overviewData={overview} 
+                        structureData={structure} 
+                        readabilityData={readability} 
+                        wordFrequencyData={word_frequency}
+                    />
+                </div>
             </div>
         </article>
     )
 }
 
 
-export default async function Results (resultData : {} | null) {
-    const filePath = path.join(`${process.cwd()}`, 'app', 'exampleResponse.json');
-    const fileContent = await fs.readFile(filePath, 'utf8');
-    const { summary, basic_analytics, visual_analytics, advanced_features } = JSON.parse(fileContent);
+export default async function Results () {
+    const textAnalysisData = analyticsData;
 
     return (
         <section className="bg-[#f5f7fa] min-h-[100vh]">
+            <CircleQuestionMark size={64} className='text-indigo-500'/> 
             <ResultsHeader />
-
+            <ResultsBody {...textAnalysisData} />
         </section>
     )
 }
