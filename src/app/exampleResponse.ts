@@ -57,11 +57,6 @@ export const analyticsData : TextAnalyticsResponse = {
         "description": "9th grade level",
         "percentage": 76
       },
-      "automated_readability_index": {
-        "score": 7.8,
-        "description": "7th to 8th grade level",
-        "percentage": 65
-      }
     }
   },
   "visual_analytics": {

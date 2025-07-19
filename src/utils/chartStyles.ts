@@ -140,11 +140,11 @@ export const createLineOptions = (title?: string, xLabel?: string, yLabel?: stri
     ...baseChartOptions,
     elements: {
         line: {
-        tension: 0.3, // Smooth curves
+            tension: 0.3, // Smooth curves
         },
         point: {
-        radius: 4,
-        hoverRadius: 6,
+            radius: 4,
+            hoverRadius: 6,
         },
     },
     plugins: {
@@ -186,28 +186,28 @@ export const createPieOptions = (title?: string) => ({
     maintainAspectRatio: false,
     plugins: {
         legend: {
-        display: true,
-        position: 'bottom' as const,
-        labels: {
-            font: chartTheme.fonts.legend,
-            color: chartTheme.colors.text,
-            padding: 20,
-        },
+            display: true,
+            position: 'bottom',
+            labels: {
+                font: chartTheme.fonts.legend,
+                color: chartTheme.colors.text,
+                padding: 20,
+            },
         },
         title: title ? {
-        display: true,
-        text: title,
-        font: chartTheme.fonts.title,
-        color: chartTheme.colors.text,
-        padding: chartTheme.spacing.padding,
+            display: true,
+            text: title,
+            font: chartTheme.fonts.title,
+            color: chartTheme.colors.text,
+            padding: chartTheme.spacing.padding,
         } : { display: false },
         tooltip: {
-        backgroundColor: chartTheme.colors.background,
-        titleColor: chartTheme.colors.text,
-        bodyColor: chartTheme.colors.text,
-        borderColor: chartTheme.colors.border,
-        borderWidth: 1,
-        cornerRadius: 6,
+            backgroundColor: chartTheme.colors.background,
+            titleColor: chartTheme.colors.text,
+            bodyColor: chartTheme.colors.text,
+            borderColor: chartTheme.colors.border,
+            borderWidth: 1,
+            cornerRadius: 6,
         },
     },
     animation: {

@@ -52,7 +52,6 @@ export interface ReadabilityMetrics {
     flesch_reading_ease: ReadabilityMetric;
     flesch_kincaid_grade: ReadabilityMetric;
     smog_index: ReadabilityMetric;
-    automated_readability_index: ReadabilityMetric;
 }
 
 export interface BasicAnalytics {

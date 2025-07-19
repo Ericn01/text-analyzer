@@ -9,11 +9,12 @@ Tooltip,
 Legend,
 LineElement,
 PointElement,
+ArcElement,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { VisualAnalytics, WordFrequencyData, SentenceLengthTrends, PartsOfSpeech } from '@/app/types/visualAnalytics';
 import { StructureMetrics } from '@/app/types/basicAnalytics';
-import { Bar, Chart, Line } from 'react-chartjs-2';
+import { Bar, Chart, Line, Pie } from 'react-chartjs-2';
 import { SectionHeader } from './Results';
 import { formatMetricName } from '@/utils/formatMetric';
 import { createBarOptions, createLineOptions, createPieOptions, chartColors } from '@/utils/chartStyles';
@@ -27,6 +28,7 @@ ChartJS.register(
     BarElement,
     LineElement,
     PointElement,
+    ArcElement,
     Title,
     Tooltip,
     Legend, 
@@ -52,11 +54,8 @@ export const WordFrequencyChart = ({ wordFrequencyData }: { wordFrequencyData: W
     };
 
     return (
-        <ChartContainer>
-            <ChartTitle chartTitle="Word Frequency Chart" />
-            <div className="flex-1 w-full">
-                <Bar options={options} data={data} />
-            </div>
+        <ChartContainer chartTitle="Word Frequency Chart">
+            <Bar options={options} data={data} />
         </ChartContainer>
     );
 };
@@ -95,11 +94,8 @@ export const StructureChart = ({ structureData }: { structureData: StructureMetr
     };
 
     return (
-        <ChartContainer>
-            <ChartTitle chartTitle="Document Structure Elements" />
-            <div className="flex-1 w-full">
-                <Bar options={options} data={chartData} />
-            </div>
+        <ChartContainer chartTitle="Document Structure Elements">
+            <Bar options={options} data={chartData} />
         </ChartContainer>
     );
 };
@@ -125,8 +121,8 @@ export const WordLengthChart = ({ wordLengthData }: { wordLengthData: any }) => 
                     const total = wordLengthData.chart_data.reduce((sum: number, item: any) => sum + item.value, 0);
                     const percentage = ((value / total) * 100).toFixed(1);
                     return [
-                    `Count: ${value.toLocaleString()}`,
-                    `Percentage: ${percentage}%`
+                        `Count: ${value.toLocaleString()}`,
+                        `Percentage: ${percentage}%`
                     ];
                 }
                 }
@@ -149,11 +145,8 @@ export const WordLengthChart = ({ wordLengthData }: { wordLengthData: any }) => 
     };
 
     return (
-        <ChartContainer>
-            <ChartTitle chartTitle="Characters per Word Chart" />
-            <div className="flex-1 w-full">
-                <Bar options={options} data={data} />
-            </div>
+        <ChartContainer chartTitle="Characters per Word Chart">
+            <Bar options={options} data={data} />
         </ChartContainer>
     );
 };
@@ -298,20 +291,23 @@ export const SentenceLengthTrendChart = ( {sentenceLengthData} : {sentenceLength
             max: Math.max(...sentenceChartData.chartData.map(d => d.x)) + 0.5,
             }
         },
-        annotation: sentenceChartData.showDividers ? {
-            annotations: sentenceChartData.paragraphDividers.reduce((acc, divider, index) => {
-                acc[`divider-${index}`] = {
-                    type: 'line',
-                    xMin: divider,
-                    xMax: divider,
-                    borderColor: '#6366f1',
-                    borderWidth: 2,
-                    borderDash: [5, 5],
-                };
-                console.log(acc)
-                return acc;
-            }, {} as Record<string, any>)
-        } : undefined // Does not appear to work as of right now
+        plugins: {
+            ...baseOptions.plugins,
+            annotation: sentenceChartData.showDividers ? {
+                annotations: sentenceChartData.paragraphDividers.reduce((acc, divider, index) => {
+                    acc[`divider-${index}`] = {
+                        type: 'line',
+                        xMin: divider,
+                        xMax: divider,
+                        borderColor: '#6366f1',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                    };
+                    console.log(acc)
+                    return acc;
+                }, {} as Record<string, any>)
+            } : undefined // Does not appear to work as of right now
+        }
     };
 
     const chartData = {
@@ -355,13 +351,29 @@ export const SentenceLengthTrendChart = ( {sentenceLengthData} : {sentenceLength
         }]
     }
     return (
-        <ChartContainer>
-        <ChartTitle chartTitle="Sentence Length Trends" />
-        <div className="flex-1 w-full">
+        <ChartContainer chartTitle="Sentence Length Trends">
             <Line options={options} data={chartData} />
-        </div>
         </ChartContainer>
     );
+}
+
+
+
+const GrammarBreakdownChart = ({grammarData} : {grammarData : PartsOfSpeech}) => {
+    const options = createPieOptions();
+    const chartData = {
+        labels: grammarData.chart_data.map(item => item.label),
+        datasets: [{
+            label: grammarData.chart_data.map(item => item.label),
+            data: grammarData.chart_data.map(item => item.value),
+            borderColor: 'rgba(0,0,0,0.1)',
+            backgroundColor: grammarData.chart_data.map(item => item.color)
+    }]};
+    return (
+        <ChartContainer chartTitle="Parts of Speech">
+            <Pie options={options} data={chartData} />
+        </ChartContainer>
+    )
 }
 
 /* Chart Title */
@@ -370,9 +382,12 @@ const ChartTitle = ({ chartTitle }: { chartTitle: string }) => (
 );
 
 /* Chart Container */
-const ChartContainer = ({ children }: { children: React.ReactNode }) => (
+const ChartContainer = ({ chartTitle, children }: { chartTitle : string, children: React.ReactElement }) => (
 <div className="bg-[#f8f9ff] rounded-lg p-5 h-[400px] flex flex-col">
-    {children}
+    <ChartTitle chartTitle={chartTitle} />
+    <div className='flex-1 w-full'>
+        {children}
+    </div>
 </div>
 );
 
@@ -388,7 +403,8 @@ const ChartsGrid= ({
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-5">
                 <WordFrequencyChart wordFrequencyData={word_frequency} />
                 <WordLengthChart wordLengthData={word_length_distribution} />
-                <SentenceLengthTrendChart  sentenceLengthData={sentence_length_trends}/>
+                <SentenceLengthTrendChart sentenceLengthData={sentence_length_trends}/>
+                <GrammarBreakdownChart grammarData={parts_of_speech} />
             </div>
         </section>
     );
