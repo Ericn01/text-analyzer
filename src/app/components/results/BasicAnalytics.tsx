@@ -52,7 +52,7 @@ const BasicAnalytics = ({
     }
 
     return (
-        <article className="w-full max-w-6xl mx-auto">
+        <article id="basic" className="w-full max-w-6xl mx-auto mb-7">
             <SectionHeader sectionName="Basic Analytics" />
             
             <div className="flex gap-1 mb-6 rounded-lg p-1 bg-gray-100 w-fit">
@@ -100,8 +100,10 @@ const OverviewTab = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left side: Metrics list */}
             <div className="space-y-6">
-                <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Document Metrics</h3>
+                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden max-w-md">
+                    <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-800">Document Metrics</h3>
+                    </div>
                     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                         {Object.entries(overviewData).map(([metric, value], index) => (
                             <div 
@@ -132,34 +134,33 @@ const OverviewTab = ({
     );
 };
 
-type StructureTabChartData = {
-    metric: string, 
-    value: any
-}
-
-
 const StructureTab = ({ structureData }: { structureData: StructureMetrics }) => {
     return (
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden max-w-md">
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-800">Document Structure</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+                <div className="bg-white rounded-lg border border-gray-200 overflow-hidden max-w-md">
+                    <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-800">Document Structure</h3>
+                    </div>
+                    {Object.entries(structureData).map(([metric, value], index) => (
+                        <div 
+                            key={metric} 
+                            className={`flex justify-between items-center px-4 py-3 ${
+                                index !== Object.entries(structureData).length - 1 ? 'border-b border-gray-100' : ''
+                            }`}
+                        >
+                            <span className="text-gray-700 font-medium">
+                                {formatMetricName(metric)}
+                            </span>
+                            <span className="text-gray-900 font-semibold">
+                                {value.toLocaleString()}
+                            </span>
+                        </div>
+                    ))}
             </div>
-            {Object.entries(structureData).map(([metric, value], index) => (
-                <div 
-                    key={metric} 
-                    className={`flex justify-between items-center px-4 py-3 ${
-                        index !== Object.entries(structureData).length - 1 ? 'border-b border-gray-100' : ''
-                    }`}
-                >
-                    <span className="text-gray-700 font-medium">
-                        {formatMetricName(metric)}
-                    </span>
-                    <span className="text-gray-900 font-semibold">
-                        {value.toLocaleString()}
-                    </span>
-                </div>
-            ))}
 
+                
+            </div>
             {/* Right side: Chart */}
             <div className="bg-white rounded-lg border border-gray-200 p-6">
                 <StructureChart structureData={structureData} />
@@ -168,7 +169,6 @@ const StructureTab = ({ structureData }: { structureData: StructureMetrics }) =>
     );
 };
 
-// Enhanced Readability Tab
 const ReadabilityTab = ({ readabilityData }: { readabilityData: ReadabilityMetrics }) => {
     return (
         <div className="space-y-6">
@@ -207,7 +207,7 @@ const ReadabilityCard = ({
     };
 
     return (
-        <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div id="basic" className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="text-center">
                 <h4 className="text-lg font-semibold text-gray-800 mb-3">
                     {formatMetricName(metricName)}

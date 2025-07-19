@@ -99,14 +99,28 @@ export const analyticsData : TextAnalyticsResponse = {
       "data_points": [
         { "sentence": 1, "length": 18, "paragraph": 1 },
         { "sentence": 2, "length": 22, "paragraph": 1 },
-        { "sentence": 3, "length": 15, "paragraph": 1 }
+        { "sentence": 3, "length": 15, "paragraph": 1 },
+        { "sentence": 1, "length": 25, "paragraph": 2 },
+        { "sentence": 2, "length": 17, "paragraph": 2 },
+        { "sentence": 1, "length": 14, "paragraph": 3 },
+        { "sentence": 2, "length": 18, "paragraph": 3 },
+        { "sentence": 3, "length": 26, "paragraph": 3 },
+        { "sentence": 1, "length": 19, "paragraph": 4 },
+        { "sentence": 2, "length": 20, "paragraph": 4 }
       ],
       "chart_data": [
         { "x": 1, "y": 18 },
         { "x": 2, "y": 22 },
-        { "x": 3, "y": 15 }
+        { "x": 3, "y": 15 },
+        { "x": 4, "y": 25 },
+        { "x": 5, "y": 17 },
+        { "x": 6, "y": 14 },
+        { "x": 7, "y": 18 },
+        { "x": 8, "y": 26 },
+        { "x": 9, "y": 19 },
+        { "x": 10, "y": 20 }
       ],
-      "average_length": 20.8,
+      "average_length": 19.4,
       "trend": "stable"
     },
     "parts_of_speech": {
