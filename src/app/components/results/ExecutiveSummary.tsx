@@ -3,6 +3,13 @@ import { randomUUID } from 'crypto';
 import { AnalyticsSummary, DocumentInfo } from '../../types/basicAnalytics';
 import { SectionHeader } from './Results';
 
+
+const convertUploadDate = (uploadDate : Date) : string => {
+    const convertedDate = ""
+
+    return convertedDate;
+}
+
 type ExecutiveSummaryType = {
     summary: AnalyticsSummary,
     document: DocumentInfo
@@ -44,7 +51,7 @@ const StatCard = ({value, label} : StatCardType) => {
     return (
         <div className="text-white p-6 rounded-lg text-center bg-linear-120 from-[#667eea] from-0% to-[#764ba2]">
             <div className="text-5xl font-bold mb-1">
-                {value.toLocaleString()}
+                {label === 'Sentiment Score' ?  `${(value * 100).toFixed(0)}%` : value.toLocaleString()}
             </div>
             <div className="text-sm opacity-90">
                 {label}

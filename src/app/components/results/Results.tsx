@@ -1,16 +1,12 @@
-
 import { ReactElement } from 'react';
 import Navigation from './Navigation';
 import ExecutiveSummary from './ExecutiveSummary';
 import { TextAnalyticsResponse } from '@/app/types/analyticsResponse';
 import ResultsHeader from './ResultsHeader';
 import BasicAnalytics from './BasicAnalytics';
+import ChartsGrid from './VisualAnalytics';
 import { CircleQuestionMark } from 'lucide-react';
 import { analyticsData } from '@/app/exampleResponse';
-
-
-//import { getTextAnalysisData } from '@/app/lib/analyticsData';
-
 
 type SectionHeaderProps = {
     sectionName: string
@@ -36,7 +32,7 @@ const ResultsBody = ({
     const {} = advanced_features
     return (
         <article className="max-w-[1200px] mx-auto p-5">
-            <div className="grid grid-cols-[250px_1fr] gap-6 my-auto">
+            <div className="md:grid grid-cols-[250px_1fr] gap-6 my-auto">
                 <Navigation />
                 <div className="bg-white rounded-xl p-7 shadow-lg">
                     <h1> Analysis completed at {new Date(timestamp).toLocaleDateString()}</h1>
@@ -48,7 +44,15 @@ const ResultsBody = ({
                         structureData={structure} 
                         readabilityData={readability} 
                         wordFrequencyData={word_frequency}
+                        wordLengthData={word_length_distribution}
                     />
+                    {/* Charts Grid (still in progress) */}
+                    <ChartsGrid 
+                        word_frequency={word_frequency}
+                        word_length_distribution={word_length_distribution}
+                        sentence_length_trends={sentence_length_trends}
+                        parts_of_speech={parts_of_speech}
+                    /> 
                 </div>
             </div>
         </article>

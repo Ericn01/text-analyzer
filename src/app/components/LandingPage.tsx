@@ -1,4 +1,3 @@
-"use client";
 import DragDropFileHandler from "./upload/DragDropFileHandler";
 
 const LandingPage = () => {
