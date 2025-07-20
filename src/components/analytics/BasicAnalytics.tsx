@@ -3,9 +3,9 @@ import { SectionHeader } from "./Results"
 import { useState } from "react";
 import { OverviewMetrics, StructureMetrics, ReadabilityMetrics, ReadabilityMetric } from "@/types/basicAnalytics";
 import { WordFrequencyData, WordLengthDistribution } from "@/types/visualAnalytics";
-import { WordFrequencyChart } from "./VisualAnalytics";
+import { WordFrequencyChart } from "../charts/WordFrequencyChart";
 import { formatMetricName } from "@/lib/utils/formatMetric";
-import { StructureChart } from "./VisualAnalytics";
+import { StructureChart } from "../charts/StructureChart";
 
 // Props interface for the component
 type BasicAnalyticsProps = {

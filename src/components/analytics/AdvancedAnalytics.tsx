@@ -152,7 +152,7 @@ const ModelFeatures = ({
     language,
 }: AdvancedFeaturesProps) => {
     return (
-        <article className="max-w-4xl mx-auto mt-10 px-4">
+        <article id="advanced" className="max-w-4xl mx-auto mt-10 px-4">
             <SectionHeader sectionName="Advanced Features" />
 
             <AccordionItem title="Sentiment Analysis">

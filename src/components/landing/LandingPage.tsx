@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import DragDropFileHandler from "./upload/DragDropFileHandler";
+import DragDropFileHandler from "./DragDropFileHandler";
 import { ArrowRight } from "lucide-react";
 
 const LandingPage = () => {

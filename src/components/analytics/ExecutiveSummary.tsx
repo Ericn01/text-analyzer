@@ -17,22 +17,40 @@ type ExecutiveSummaryType = {
 }
 
 const ExecutiveSummary = ({summary, document}: ExecutiveSummaryType) => {
-    const statCardLabels = ['total_words', 'reading_time_minutes', 'sentiment_score', 'reading_level']
+    const statCardLabels = ['total_words', 'reading_time_minutes', 'sentiment_score', 'reading_level'];
+    
+    const statCards = Object.entries(summary).filter(([label]) =>
+        statCardLabels.includes(label)
+    );
+
+    const insightCards = Object.entries(summary).filter(([label]) =>
+        !statCardLabels.includes(label)
+    );
     return (
         <div id="summary" className="mb-10">
             <SectionHeader sectionName="Executive Summary" />
-            <DocOverview {...document}/>
+            <DocOverview {...document} />
+
+            {/* Stat Cards */}
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-5 mb-8">
-                {Object.entries(summary).map(([label, value]) => {
-                        const convertedLabel = labelConversion(label);
-                        return statCardLabels.includes(label) ? (
-                            <StatCard key={randomUUID()} value={value as number} label={convertedLabel} />
-                        ) : 
-                        (
-                            <InsightCard key={randomUUID()} value={value as string | string[]} label={convertedLabel} />
-                        )
-                    }
-                )}
+                {statCards.map(([label, value]) => (
+                <StatCard
+                    key={randomUUID()}
+                    value={value as number}
+                    label={labelConversion(label)}
+                />
+                ))}
+            </div>
+
+            {/* Insight Cards */}
+            <div className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-5">
+                {insightCards.map(([label, value]) => (
+                <InsightCard
+                    key={randomUUID()}
+                    value={value as string | string[]}
+                    label={labelConversion(label)}
+                />
+                ))}
             </div>
         </div>
     )

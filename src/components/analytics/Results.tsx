@@ -5,9 +5,8 @@ import { TextAnalyticsResponse } from '@/types/analyticsResponse';
 import ResultsHeader from './ResultsHeader';
 import BasicAnalytics from './BasicAnalytics';
 import ChartsGrid from './VisualAnalytics';
-import { CircleQuestionMark } from 'lucide-react';
 import { analyticsData } from '@/exampleResponse';
-import ModelFeatures from './AdvancedFeatures';
+import ModelFeatures from '@/components/analytics/AdvancedAnalytics';
 
 type SectionHeaderProps = {
     sectionName: string
@@ -21,7 +20,7 @@ export const SectionHeader = ({ sectionName } : SectionHeaderProps) : ReactEleme
     )
 }
 
-const ReportGenerationDate = () => (
+const ReportGenerationDate = ({timestamp}: {timestamp: string}) => (
     <div className="relative w-full">
         <div
             title="Timestamp of report generation"
@@ -34,7 +33,7 @@ const ReportGenerationDate = () => (
             day: 'numeric',
             month: 'long',
             year: 'numeric',
-            }).format(new Date())}`}
+            }).format(new Date(timestamp))}`}
         </div>
     </div>
 );
@@ -54,7 +53,7 @@ const ResultsBody = ({
             <div className="md:grid grid-cols-[250px_1fr] gap-6 my-auto">
                 <Navigation />
                 <div className="bg-white rounded-xl p-7 shadow-lg">
-                    <ReportGenerationDate />
+                    <ReportGenerationDate timestamp={timestamp}/>
                     {/* Executive Summary Section */}
                     <ExecutiveSummary document={document} summary={summary}/>
                     {/* Basic Analytics (Accordion) */}
