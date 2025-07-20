@@ -1,9 +1,7 @@
 const ResultsHeader = () => {
     return (
-        <header className="bg-white drop-shadow-2xl py-5 mb-6">
-
+        <header className="bg-white drop-shadow-xl py-5 mb-6">
             <div className="container max-w-[1200px] mx-auto p-5">
-
                 <nav className="flex justify-between items-center">
                     <h1 className="text-xl md:text-3xl text-[#333] font-black"> TextAnalyzer Results</h1>
                     <ul className="flex gap-5">

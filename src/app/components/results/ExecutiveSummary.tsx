@@ -5,9 +5,10 @@ import { SectionHeader } from './Results';
 
 
 const convertUploadDate = (uploadDate : Date) : string => {
-    const convertedDate = ""
+    const today = new Date();
+    const daysAgo = Math.floor((today.getTime() - uploadDate.getTime()) / (1000 * 60 * 60 * 24));
 
-    return convertedDate;
+    return daysAgo === 0 ? " (Today)" : daysAgo === 1 ? " (Yesterday)" : ` ${daysAgo} days ago`;
 }
 
 type ExecutiveSummaryType = {
@@ -99,9 +100,9 @@ const DocOverview = ({filename, uploaded_at, size_bytes, category} : DocumentInf
         return convertedSize;
     }
     return (
-        <div className="bg-[#f8f9ff] border-l-5 border-[#667eea] p-5 rounded-md mb-5">
+        <div className="bg-[#f8f9ff] text-[#333] border-l-5 border-[#667eea] p-5 rounded-md mb-5">
             <span> <strong className='text-md'> Document: </strong> {filename}</span> •
-            <span> <strong className='text-md'> Uploaded: </strong> {new Date(uploaded_at).toLocaleDateString()} </span> •
+            <span> <strong className='text-md'> Uploaded: </strong> {convertUploadDate(new Date(uploaded_at))} </span> •
             <span><strong className='text-md'> Type: </strong> {category}</span> •
             <span><strong className='text-md'> Size: </strong> {convertSize(size_bytes)} </span>
         </div>

@@ -41,12 +41,12 @@ const LandingPage = () => {
                         <div className="bg-white/30 w-[32px] h-[32px] rounded-full flex items-center justify-center font-black">1</div>
                         <span>Upload</span>
                     </div>
-                    <div className="text-white/60 text-xl">→</div>
+                    <div className="text-white/60 text-3xl">→</div>
                     <div className="flex items-center gap-2 text-white/80">
                         <div className="bg-white/30 w-[32px] h-[32px] rounded-full flex items-center justify-center font-black">2</div>
                         <span>Analyze</span>
                     </div>
-                    <div className="text-white/60 text-xl">→</div>
+                    <div className="text-white/60 text-3xl">→</div>
                     <div className="flex items-center gap-2 text-white/80">
                         <div className="bg-white/30 w-[32px] h-[32px] rounded-full flex items-center justify-center font-black">3</div>
                         <span>Results</span>

@@ -21,6 +21,24 @@ export const SectionHeader = ({ sectionName } : SectionHeaderProps) : ReactEleme
     )
 }
 
+const ReportGenerationDate = () => (
+    <div className="relative w-full">
+        <div
+            title="Timestamp of report generation"
+            className="absolute top-0 right-3 text-sm font-semibold px-3 py-1 border border-black/20 rounded-full 
+                    bg-gradient-to-r from-green-400 to-emerald-500
+                    text-white shadow-md shadow-emerald-500/20 transition-all duration-300 
+                    hover:shadow-lg hover:scale-105 hover:cursor-default"
+        >
+            {`Generated: ${new Intl.DateTimeFormat('en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            }).format(new Date())}`}
+        </div>
+    </div>
+);
+
 const ResultsBody = ({
                     timestamp,
                     document, 
@@ -36,7 +54,7 @@ const ResultsBody = ({
             <div className="md:grid grid-cols-[250px_1fr] gap-6 my-auto">
                 <Navigation />
                 <div className="bg-white rounded-xl p-7 shadow-lg">
-                    <h1> Analysis completed at {new Date(timestamp).toLocaleDateString()}</h1>
+                    <ReportGenerationDate />
                     {/* Executive Summary Section */}
                     <ExecutiveSummary document={document} summary={summary}/>
                     {/* Basic Analytics (Accordion) */}
@@ -72,8 +90,7 @@ export default async function Results () {
     const textAnalysisData = analyticsData;
 
     return (
-        <section className="bg-[#f5f7fa] min-h-[100vh]">
-            <CircleQuestionMark size={64} className='text-indigo-500'/> 
+        <section className="bg-[#f5f7fa] min-h-[100vh] text-[#333]">
             <ResultsHeader />
             <ResultsBody {...textAnalysisData} />
         </section>
