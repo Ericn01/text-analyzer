@@ -1,9 +1,23 @@
 import { useState, useRef } from "react";
 import { UploadCloud } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function DragDropFileHandler() {
     const [isDragging, setIsDragging] = useState(false);
+    const [error, setError] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
+
+    const handleUpload = async (file: File) => {
+        // Move to waiting page
+        router.push("/analyzing");
+
+        // Upload the file to the backend
+        const response = await fetch("/api/analyze", {
+            method: "POST",
+            body: file,
+        });
+    }
 
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
@@ -12,15 +26,27 @@ export default function DragDropFileHandler() {
 
         const file = e.dataTransfer.files?.[0];
         if (file && validateFile(file)) {
-        // Handle file upload here
-        console.log("Dropped file:", file);
+            // Handle file upload here
+            handleUpload(file)
         }
     };
 
     const validateFile = (file: File) => {
         const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
         const maxSize = 5 * 1024 * 1024;
-        return validTypes.includes(file.type) && file.size <= maxSize;
+        
+        const isValidType = validTypes.includes(file.type);
+        const isValidSize = file.size <= maxSize;
+
+        if (!isValidType) {
+            setError('File must be of type pdf, docx, or txt');
+            return false;
+        } 
+        if (!isValidSize) {
+            setError('File size must be below 10MB')
+            return false;
+        }
+        return true;
     };
 
     const handleBrowseClick = () => {
@@ -54,20 +80,19 @@ export default function DragDropFileHandler() {
                     className="mt-4 px-6 py-2 rounded-full bg-blue-500 hover:bg-blue-600 transition cursor-pointer"
                     >
                     Browse Files
-                    </button>
-                    <input
+                </button>
+                <input
                     ref={inputRef}
                     type="file"
                     hidden
                     onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file && validateFile(file)) {
-                            console.log("Selected file:", file);
-                        } else{
-                            console.error("File failed to upload")
-                        }
+                            handleUpload(file);
+                        } 
                     }}
                 />
+                {error ? ( <strong className="text-red-500 text-xl mt-2>"> {error} </strong> ) : (<></>)}
             </div>
         </div>
     );

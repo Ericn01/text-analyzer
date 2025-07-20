@@ -38,7 +38,6 @@ export interface StructureMetrics {
     links: number;
     images: number;
     tables: number;
-    footnotes: number;
 }
 
 export interface ReadabilityMetric {
