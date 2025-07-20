@@ -12,13 +12,12 @@ PointElement,
 ArcElement,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { VisualAnalytics } from '@/types/visualAnalytics';
+import { PartsOfSpeech, SentenceLengthTrends, VisualAnalytics, WordFrequencyData, WordLengthDistribution } from '@/types/visualAnalytics';
 import { WordFrequencyChart} from '../charts/WordFrequencyChart';
 import { WordLengthChart } from '../charts/WordLengthChart';
 import { SentenceLengthTrendChart } from '../charts/SentenceLengthTrendChart';
 import { GrammarBreakdownChart } from '../charts/GrammarBreakdownChart';
 import { SectionHeader } from './Results';
-
 
 ChartJS.register(
     annotationPlugin,
@@ -48,16 +47,21 @@ export const ChartContainer = ({ chartTitle, children }: { chartTitle : string, 
 </div>
 );
 
-
+type ChartsGridProps = {
+    wordFrequency: WordFrequencyData;
+    wordLengthDistribution: WordLengthDistribution;
+    sentenceLengthTrends: SentenceLengthTrends;
+    partsOfSpeech: PartsOfSpeech;
+};
 
 const ChartsGrid= ({
     wordFrequency,
     wordLengthDistribution,
     sentenceLengthTrends,
     partsOfSpeech
-}: VisualAnalytics) => {    
+}: ChartsGridProps) => {    
     return (
-        <section id="charts" className='mb-10'>
+        <section id="charts" className='mb-8'>
             <SectionHeader sectionName='Visual Analytics' />
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-5">
                 <WordFrequencyChart wordFrequencyData={wordFrequency} />
