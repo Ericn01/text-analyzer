@@ -5,7 +5,7 @@ import {
     KeywordExtraction,
     TopicModeling,
     LanguagePatterns,
-} from "@/app/types/advancedAnalytics";
+} from "@/types/advancedAnalytics";
 import { SectionHeader } from "./Results";
 
 type AdvancedFeaturesProps = {

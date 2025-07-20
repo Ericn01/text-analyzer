@@ -1,10 +1,10 @@
 "use client";
 import { SectionHeader } from "./Results"
 import { useState } from "react";
-import { OverviewMetrics, StructureMetrics, ReadabilityMetrics, ReadabilityMetric } from "@/app/types/basicAnalytics";
-import { WordFrequencyData, WordLengthDistribution } from "@/app/types/visualAnalytics";
+import { OverviewMetrics, StructureMetrics, ReadabilityMetrics, ReadabilityMetric } from "@/types/basicAnalytics";
+import { WordFrequencyData, WordLengthDistribution } from "@/types/visualAnalytics";
 import { WordFrequencyChart } from "./VisualAnalytics";
-import { formatMetricName } from "@/utils/formatMetric";
+import { formatMetricName } from "@/lib/utils/formatMetric";
 import { StructureChart } from "./VisualAnalytics";
 
 // Props interface for the component

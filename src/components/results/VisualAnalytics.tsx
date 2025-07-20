@@ -12,14 +12,14 @@ PointElement,
 ArcElement,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { VisualAnalytics, WordFrequencyData, SentenceLengthTrends, PartsOfSpeech } from '@/app/types/visualAnalytics';
-import { StructureMetrics } from '@/app/types/basicAnalytics';
+import { VisualAnalytics, WordFrequencyData, SentenceLengthTrends, PartsOfSpeech } from '@/types/visualAnalytics';
+import { StructureMetrics } from '@/types/basicAnalytics';
 import { Bar, Chart, Line, Pie } from 'react-chartjs-2';
 import { SectionHeader } from './Results';
-import { formatMetricName } from '@/utils/formatMetric';
-import { createBarOptions, createLineOptions, createPieOptions, chartColors } from '@/utils/chartStyles';
+import { formatMetricName } from '@/lib/utils/formatMetric';
+import { createBarOptions, createLineOptions, createPieOptions, chartColors } from '@/lib/utils/chartStyles';
 import { useMemo } from 'react';
-import { XYDataPoint } from '@/app/types/coreAnalytics';
+import { XYDataPoint } from '@/types/coreAnalytics';
 
 ChartJS.register(
     annotationPlugin,

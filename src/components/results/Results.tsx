@@ -1,12 +1,12 @@
 import { ReactElement } from 'react';
 import Navigation from './Navigation';
 import ExecutiveSummary from './ExecutiveSummary';
-import { TextAnalyticsResponse } from '@/app/types/analyticsResponse';
+import { TextAnalyticsResponse } from '@/types/analyticsResponse';
 import ResultsHeader from './ResultsHeader';
 import BasicAnalytics from './BasicAnalytics';
 import ChartsGrid from './VisualAnalytics';
 import { CircleQuestionMark } from 'lucide-react';
-import { analyticsData } from '@/app/exampleResponse';
+import { analyticsData } from '@/exampleResponse';
 import ModelFeatures from './AdvancedFeatures';
 
 type SectionHeaderProps = {

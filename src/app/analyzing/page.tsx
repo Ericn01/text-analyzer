@@ -1,4 +1,4 @@
-import AnalyzingState from "@/app/components/AnalyzingState";
+import AnalyzingState from "@/components/AnalyzingState";
 
 export default function AnalyzingPage() {
     return (

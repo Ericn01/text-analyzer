@@ -1,5 +1,5 @@
-import Results from "@/app/components/results/Results";
-import LandingPage from "../components/LandingPage";
+import Results from "@/components/results/Results";
+import LandingPage from "../../components/LandingPage";
 import AnalyzingPage from "../analyzing/page";
 
 export default function ResultsPage() {
