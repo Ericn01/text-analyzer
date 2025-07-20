@@ -46,19 +46,19 @@ Example response for the NextJS backend after file parsing is complete:
         nltk, collections 
 '''
 
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException
+from app.schemas import NLPRequest
+from app.nlp_pipeline import run_nlp_analysis
 
 app = FastAPI()
 
-class InputData(BaseModel):
-    text: str
-
 @app.post("/analyze")
-def analyze_text(data: InputData):
-    return {
-        "sentiment_score": 0.82,
-        "reading_level": "Grade 9"
-    }
+def analyze_text(payload: NLPRequest):
+    if payload.metadata.word_count < 50:
+        raise HTTPException(status_code=400, detail="File too short for NLP analysis (minimum 50 words).")
+
+    results = run_nlp_analysis(payload)
+    return results
+
 
 

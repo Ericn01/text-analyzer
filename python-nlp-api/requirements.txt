@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+spacy
+textstat
+scikit-learn
+pydantic
+nltk
