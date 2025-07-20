@@ -7,6 +7,7 @@ import BasicAnalytics from './BasicAnalytics';
 import ChartsGrid from './VisualAnalytics';
 import { CircleQuestionMark } from 'lucide-react';
 import { analyticsData } from '@/app/exampleResponse';
+import ModelFeatures from './AdvancedFeatures';
 
 type SectionHeaderProps = {
     sectionName: string
@@ -29,7 +30,7 @@ const ResultsBody = ({
                     advanced_features} : TextAnalyticsResponse) => {
     const {overview, structure, readability} = basic_analytics;
     const {word_frequency, word_length_distribution, sentence_length_trends, parts_of_speech} = visual_analytics;
-    const {} = advanced_features
+    const {sentiment_analysis, keyword_extraction, topic_modeling, language_patterns} = advanced_features
     return (
         <article className="max-w-[1200px] mx-auto p-5">
             <div className="md:grid grid-cols-[250px_1fr] gap-6 my-auto">
@@ -48,11 +49,18 @@ const ResultsBody = ({
                     />
                     {/* Charts Grid (still in progress) */}
                     <ChartsGrid 
-                        word_frequency={word_frequency}
-                        word_length_distribution={word_length_distribution}
-                        sentence_length_trends={sentence_length_trends}
-                        parts_of_speech={parts_of_speech}
+                        wordFrequency={word_frequency}
+                        wordLengthDistribution={word_length_distribution}
+                        sentenceLengthTrends={sentence_length_trends}
+                        partsOfSpeech={parts_of_speech}
                     /> 
+                    {/* Advanced Features Data */}
+                    <ModelFeatures 
+                        sentiment={sentiment_analysis}
+                        keywords={keyword_extraction}
+                        topics={topic_modeling}
+                        language={language_patterns}
+                    />
                 </div>
             </div>
         </article>

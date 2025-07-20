@@ -1,13 +1,9 @@
-import AnalyzingState from "./components/AnalyzingState";
 import LandingPage from "./components/LandingPage";
-import Results from "./components/results/Results";
 
 export default function Home() {
   return (
     <main className="bg-gradient-to-br from-[#667eea] to-[#764ba2] min-h-[100vh] text-[#333]">
       <LandingPage />
-      <AnalyzingState />
-      <Results /> 
     </main>
   );
 }

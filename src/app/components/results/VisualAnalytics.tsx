@@ -449,19 +449,19 @@ const ChartContainer = ({ chartTitle, children }: { chartTitle : string, childre
 );
 
 const ChartsGrid= ({
-    word_frequency,
-    word_length_distribution,
-    sentence_length_trends,
-    parts_of_speech
+    wordFrequency,
+    wordLengthDistribution,
+    sentenceLengthTrends,
+    partsOfSpeech
 }: VisualAnalytics) => {    
     return (
         <section id="charts" className='mb-10'>
             <SectionHeader sectionName='Visual Analytics' />
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-5">
-                <WordFrequencyChart wordFrequencyData={word_frequency} />
-                <WordLengthChart wordLengthData={word_length_distribution} />
-                <SentenceLengthTrendChart sentenceLengthData={sentence_length_trends}/>
-                <GrammarBreakdownChart grammarData={parts_of_speech} />
+                <WordFrequencyChart wordFrequencyData={wordFrequency} />
+                <WordLengthChart wordLengthData={wordLengthDistribution} />
+                <SentenceLengthTrendChart sentenceLengthData={sentenceLengthTrends}/>
+                <GrammarBreakdownChart grammarData={partsOfSpeech} />
             </div>
         </section>
     );

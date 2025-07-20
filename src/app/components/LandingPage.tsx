@@ -1,13 +1,32 @@
+"use client";
+import { useRouter } from "next/navigation";
 import DragDropFileHandler from "./upload/DragDropFileHandler";
 
 const LandingPage = () => {
+    const router = useRouter();
+
+    const handleUpload = async (file: File) => {
+        // Show spinner
+        router.push("/analyzing");
+
+        // Upload file to backend, get results
+        const response = await fetch("/api/analyze", {
+            method: "POST",
+            body: file,
+        });
+
+        // Save to storage or context if needed
+        // Redirect to results page
+        router.push("/results");
+    };
+
     return (
         <section className="flex flex-col justify-center items-center min-h-screen text-center bg-gradient-to-br from-[#667eea] to-[#764ba2]">
             <div className="max-w-[1200px] p-5">
                 <h1 className="text-white text-5xl mb-4 font-bold">TextAnalyzer</h1>
                 <p className="text-white/90 text-xl mb-12">Upload your document for comprehensive text analysis and insights</p>
 
-                <DragDropFileHandler />
+                <DragDropFileHandler  />
 
                 {/* Supported Formats Tags */}
                 <div className="flex mt-8 justify-center gap-[15px]">
