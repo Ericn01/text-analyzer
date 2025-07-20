@@ -20,7 +20,7 @@ const LandingPage = () => {
         // Redirect to results page
         router.push("/results");
     };
-
+    const supportedFormats = ['PDF', 'DOCX', 'TXT', 'HTML']
     return (
         <section className="flex flex-col justify-center items-center min-h-screen text-center bg-gradient-to-br from-[#667eea] to-[#764ba2]">
             <div className="max-w-[1200px] p-5">
@@ -31,9 +31,9 @@ const LandingPage = () => {
 
                 {/* Supported Formats Tags */}
                 <div className="flex mt-8 justify-center gap-[20px]">
-                    <div className="bg-white/20 text-white py-2 px-4 rounded-[20px] ">PDF</div>
-                    <div className="bg-white/20 text-white py-2 px-4 rounded-[20px]">DOCX</div>
-                    <div className="bg-white/20 text-white py-2 px-4 rounded-[20px]">TXT</div>
+                    {supportedFormats.map(
+                        format => <SupportedFormatBadge key={format} formatName={format}/>
+                    )}
                 </div>
 
                 {/* Progress Steps */}
@@ -61,5 +61,9 @@ const LandingPage = () => {
         </section>
     );
 }
+
+const SupportedFormatBadge = ({formatName} : {formatName: string}) => (
+    <div className="bg-white/20 text-white py-2 px-4 rounded-[20px]">{formatName}</div>
+);
 
 export default LandingPage;

@@ -11,9 +11,6 @@ def nlp_analysis(text):
 def basic_sentiment(text):
     return round(TextBlob(text).sentiment.polarity, 3)
 
-def calculate_readability(text):
-    return textstat.flesch_reading_ease(text)
-
 def extract_keywords(doc):
     words = [token.lemma_.lower() for token in doc if token.is_alpha and not token.is_stop]
     freq = Counter(words)
@@ -28,3 +25,4 @@ def extract_pos_distribution(doc):
     pos_counts = Counter([token.pos_ for token in doc])
     total = sum(pos_counts.values())
     return {pos: round(count / total, 3) for pos, count in pos_counts.items()}
+

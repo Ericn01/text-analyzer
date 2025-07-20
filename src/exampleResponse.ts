@@ -39,7 +39,6 @@ export const analyticsData : TextAnalyticsResponse = {
       "links": 5,
       "images": 3,
       "tables": 2,
-      "footnotes": 7
     },
     "readability": {
       "flesch_reading_ease": {

@@ -3,6 +3,12 @@ const isEmpty = (text: string): boolean => {
 }
 
 /**
+ * Counts characters in text
+ */
+export const countCharacters = (text: string) : number => 
+    text.replaceAll(/\s/g, '').split('').length;
+
+/**
  * Counts words in text
  */
 export const countWords = (text: string): number => {

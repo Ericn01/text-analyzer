@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js');
 
-const parsePDF = async (filePath) => {
+const parsePDF = async (filePath : string) => {
     const rawData = new Uint8Array(fs.readFileSync(filePath));
     const pdf = await pdfjsLib.getDocument({ data: rawData }).promise;
 

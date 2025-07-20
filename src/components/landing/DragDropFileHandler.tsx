@@ -5,18 +5,34 @@ import { useRouter } from "next/navigation";
 export default function DragDropFileHandler() {
     const [isDragging, setIsDragging] = useState(false);
     const [error, setError] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
     const handleUpload = async (file: File) => {
-        // Move to waiting page
+        // Move to the waiting page
         router.push("/analyzing");
+        try {
+            // Creating a FormData object to send the file
+            const formData = new FormData();
+            formData.append('file', file);
 
-        // Upload the file to the backend
-        const response = await fetch("/api/analyze", {
-            method: "POST",
-            body: file,
-        });
+            // Upload the file to the backend
+            const response = await fetch("/api/analyze", {
+                method: "POST",
+                body: file,
+            });
+
+            const result = await response.json();
+        }
+
+        catch (err) {
+            console.error("Upload error: ", err);
+            setError(err instanceof Error ? err.message : 'Upload failed');
+        } finally {
+            setIsUploading(false);
+        }
+        
     }
 
     const handleDrop = (e: React.DragEvent) => {
@@ -26,20 +42,23 @@ export default function DragDropFileHandler() {
 
         const file = e.dataTransfer.files?.[0];
         if (file && validateFile(file)) {
-            // Handle file upload here
             handleUpload(file)
         }
     };
 
     const validateFile = (file: File) => {
-        const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
-        const maxSize = 5 * 1024 * 1024;
+        const validTypes = [
+            'application/pdf', 
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+            'text/plain',
+            'text/html'];
+        const maxSize = 10 * 1024 * 1024;
         
         const isValidType = validTypes.includes(file.type);
         const isValidSize = file.size <= maxSize;
 
         if (!isValidType) {
-            setError('File must be of type pdf, docx, or txt');
+            setError('File must be of type PDF, DOCX, TXT, or HTML');
             return false;
         } 
         if (!isValidSize) {
@@ -57,6 +76,7 @@ export default function DragDropFileHandler() {
         <div
             className={`w-full max-w-2xl mx-auto px-6 py-16 border-2 border-dashed rounded-2xl transition-colors duration-300
                 ${isDragging ? 'border-blue-400 bg-blue-100/30' : 'border-white/30 bg-white/10'}
+                ${isUploading ? 'pointer-events-none opacity-75' : ''}
             `}
             onDragOver={(e) => {
                 e.preventDefault();
@@ -85,6 +105,7 @@ export default function DragDropFileHandler() {
                     ref={inputRef}
                     type="file"
                     hidden
+                    accept=".pdf,.docx,.txt,.html"
                     onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file && validateFile(file)) {
@@ -92,7 +113,11 @@ export default function DragDropFileHandler() {
                         } 
                     }}
                 />
-                {error ? ( <strong className="text-red-500 text-xl mt-2>"> {error} </strong> ) : (<></>)}
+                {error && (
+                    <div className="text-red-400 text-sm font-bold mt-2 p-2 bg-red-900/20 rounded-md">
+                        {error}
+                    </div>
+                )}
             </div>
         </div>
     );
