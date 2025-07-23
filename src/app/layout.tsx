@@ -4,7 +4,7 @@ import "./globals.css";
 
 
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 const mono = Roboto_Mono({ subsets: ['latin'], variable: '--font-mono' })
 
 export const metadata: Metadata = {

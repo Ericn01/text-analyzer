@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { writeFile, unlink } from 'fs/promises';
+import AnalyzeText from '@/lib/utils/textAnalysis';
 
 export async function POST(request: NextRequest) {
     try {
@@ -34,6 +35,7 @@ export async function POST(request: NextRequest) {
 
         try {
         const startTime = Date.now();
+        
         // Process file based on type
         switch (fileExtension) {
             case '.html':
@@ -53,7 +55,7 @@ export async function POST(request: NextRequest) {
                 throw new Error('Unsupported file type');
         }
 
-        // Analyze the document (you'll need to implement this function)
+        // Analyze the document 
         const analysis = await analyzeDocument(content, fileExtension);
 
         // Clean up temporary file

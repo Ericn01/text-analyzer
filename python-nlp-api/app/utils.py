@@ -1,4 +1,3 @@
-import textstat
 from textblob import TextBlob
 import spacy
 from collections import Counter

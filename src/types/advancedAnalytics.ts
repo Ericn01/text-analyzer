@@ -25,8 +25,8 @@ export interface SentimentAnalysis {
 
 export interface KeywordExtraction {
     keywords: KeywordItem[];
-    key_phrases: KeyPhrase[];
-    named_entities: NamedEntity[];
+    key_phrases?: KeyPhrase[];
+    named_entities?: NamedEntity[];
 }
 
 export interface TopicModelingTopic {
@@ -45,8 +45,8 @@ export interface TopicEvolution {
 
 export interface TopicModeling {
     primary_topics: TopicModelingTopic[];
-    topic_coherence_score: number;
-    topic_evolution: TopicEvolution[];
+    topic_coherence_score?: number;
+    topic_evolution?: TopicEvolution[];
 }
 
 export interface LanguagePatterns {

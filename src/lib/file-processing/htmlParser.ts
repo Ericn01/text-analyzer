@@ -1,4 +1,7 @@
+import { StructureMetrics } from '@/types/basicAnalytics';
 import { JSDOM } from 'jsdom';
+import nlp from 'compromise';
+
 
 
 
@@ -16,7 +19,7 @@ export const parseHTMLDocument = (htmlContent : string) => {
     const structure = extractStructure(document);
 
     // Extract the text content from the DOM
-    const textContent = extractCleanText(document)
+    const textContent = extractCleanText(document);
 
 } 
 
@@ -24,7 +27,7 @@ export const parseHTMLDocument = (htmlContent : string) => {
 /**
  * Extracts structural elements from the HTML document
  */
-const extractStructure = (document: Document) => {
+const extractStructure = (document: Document) : StructureMetrics => {
     return {
         headings: document.querySelectorAll('h1, h2, h3, h4, h5, h6').length,
         lists: document.querySelectorAll('ul, ol, dl').length,
@@ -37,16 +40,22 @@ const extractStructure = (document: Document) => {
 }
 
 const extractCleanText = (document: Document) => {
+
+    const paragraphs = Array.from(document.querySelectorAll('p'));
     // Remove script and style elements
     const scripts = document.querySelectorAll('script, style, noscript');
     scripts.forEach(el => el.remove());
 
-    // Get text content from body, or entire document if no body
-    const textContent = document.body?.textContent || document.textContent || '';
+    const results : string[][] = [];
 
-    // Clean up whitespace and normalize
-    return textContent
-        .replace(/\s+/g, ' ')
-        .replace(/\n\s*\n/g, '\n')
-        .trim();
+    paragraphs.forEach(p => {
+        const text = p.textContent?.trim() ?? '';
+        if (text) {
+        const sentences = text.match(/[^.!?]+[.!?]+/g) ?? [text];
+            results.push(sentences.map(s => s.trim()));
+        }
+    });
+
+    return results;
 }
+

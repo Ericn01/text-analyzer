@@ -27,7 +27,7 @@ export interface SentenceLengthTrends {
     }>;
     chart_data: XYDataPoint[];
     average_length: number;
-    trend: 'increasing' | 'decreasing' | 'stable';
+    trend?: 'increasing' | 'decreasing' | 'stable';
 }
 
 export interface PartsOfSpeech {

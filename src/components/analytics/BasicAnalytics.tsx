@@ -210,7 +210,7 @@ const ReadabilityCard = ({
         <div id="basic" className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="text-center">
                 <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                    {formatMetricName(metricName)}
+                    {formatMetricName(metricName, true)}
                 </h4>
                 <p className={`text-3xl font-bold mb-2 ${getScoreColor(readabilityData.percentage)}`}>
                     {readabilityData.score.toFixed(1)}

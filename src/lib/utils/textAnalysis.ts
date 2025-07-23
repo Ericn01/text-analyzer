@@ -1,3 +1,5 @@
-export const AnalyzeText = () => {
-    
+const AnalyzeText = () => {
+
 }
+
+export default AnalyzeText;

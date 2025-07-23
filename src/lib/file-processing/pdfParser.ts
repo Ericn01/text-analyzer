@@ -1,9 +1,7 @@
-import fs from 'fs'
-import path from 'path'
-const pdfjsLib = require('pdfjs-dist/legacy/build/pdf.js');
+import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
 
-const parsePDF = async (filePath : string) => {
-    const rawData = new Uint8Array(fs.readFileSync(filePath));
+const parsePDF = async (file: File) => {
+    const rawData = new Uint8Array(await file.arrayBuffer());
     const pdf = await pdfjsLib.getDocument({ data: rawData }).promise;
 
     const structureData = {
@@ -48,7 +46,7 @@ const parsePDF = async (filePath : string) => {
         }
     }
 
-    // TODO: Add heuristics for tables and footnotes
+    // TODO: Add heuristics for tables
     return structureData;
 };
 
