@@ -1,7 +1,8 @@
 import { SentenceLengthTrends, PartsOfSpeech, WordFrequencyData } from "@/types/visualAnalytics";
 import nlp from "compromise";
+import { isStopWord } from "../utils/stopword";
 
-export const anaylizeWordFrequency = (text : string) : WordFrequencyData => {
+export const analyzeWordFrequency = (text : string) : WordFrequencyData => {
     // convert to lowercase and extract words only
     const words = text.toLowerCase().match(/\b[a-zA-Z']+\b/g);
 
@@ -40,6 +41,7 @@ export const anaylizeWordFrequency = (text : string) : WordFrequencyData => {
         }
 
 }
+
 
 export const getSentenceLengthTrends = (paragraphs: string[][]): SentenceLengthTrends => {
     const data_points: SentenceLengthTrends["data_points"] = [];
@@ -116,113 +118,4 @@ export const getPartsOfSpeechBreakdown = (text: string): PartsOfSpeech => {
         breakdown: breakdown as PartsOfSpeech['breakdown'],
         chart_data
     };
-}
-
-
-const isStopWord = (word: string): boolean => {
-    // Using the NLTK list of english stopwords
-    const stopWords = new Set([
-    "myself",
-    "our",
-    "ours",
-    "ourselves",
-    "you",
-    "your",
-    "yours",
-    "yourself",
-    "yourselves",
-    "him",
-    "his",
-    "himself",
-    "she",
-    "her",
-    "hers",
-    "herself",
-    "its",
-    "itself",
-    "they",
-    "them",
-    "their",
-    "theirs",
-    "themselves",
-    "what",
-    "which",
-    "who",
-    "whom",
-    "this",
-    "that",
-    "these",
-    "those",
-    "are",
-    "was",
-    "were",
-    "been",
-    "being",
-    "have",
-    "has",
-    "had",
-    "having",
-    "does",
-    "did",
-    "doing",
-    "the",
-    "and",
-    "but",
-    "because",
-    "until",
-    "while",
-    "for",
-    "with",
-    "about",
-    "against",
-    "between",
-    "into",
-    "through",
-    "during",
-    "before",
-    "after",
-    "above",
-    "below",
-    "from",
-    "down",
-    "out",
-    "off",
-    "over",
-    "under",
-    "again",
-    "further",
-    "then",
-    "once",
-    "here",
-    "there",
-    "when",
-    "where",
-    "why",
-    "how",
-    "all",
-    "any",
-    "both",
-    "each",
-    "few",
-    "more",
-    "most",
-    "other",
-    "some",
-    "such",
-    "nor",
-    "not",
-    "only",
-    "own",
-    "same",
-    "than",
-    "too",
-    "very",
-    "can",
-    "will",
-    "just",
-    "don",
-    "should",
-    "now"
-]);
-    return stopWords.has(word);
 }

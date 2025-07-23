@@ -26,9 +26,9 @@ class EnhancedNLPAnalyzer:
         """Initialize with multiple lightweight models"""
         try:
             # Load spaCy's small English model
-            self.nlp = spacy.load("en_core_web_sm")
+            self.nlp = spacy.load("en_core_web_md")
         except OSError:
-            raise Exception("Please install spaCy small model: python -m spacy download en_core_web_sm")
+            raise Exception("Please install spaCy small model: python -m spacy download en_core_web_md")
         
         # Initialize VADER sentiment analyzer
         self.vader_analyzer = SentimentIntensityAnalyzer()
@@ -652,8 +652,6 @@ def main():
     analyzer = EnhancedNLPAnalyzer()
     
     sample_text = """
-        The Color of the Sky: A Scientific and Cultural Exploration
-
 The sky, a vast canvas that stretches across our view every day, evokes wonder, calm, and curiosity. Though it may seem like a simple backdrop to our daily lives, the color of the sky is a phenomenon rooted in complex scientific principles and shaped by cultural, poetic, and emotional interpretations. From the bright blue of a summer noon to the fiery reds of sunset and the inky black of night, the changing hues of the sky tell a story of light, atmosphere, and human perception.
 The Science Behind the Sky’s Color
 

@@ -1,9 +1,5 @@
-import { StructureMetrics } from '@/types/basicAnalytics';
 import { JSDOM } from 'jsdom';
-import nlp from 'compromise';
-
-
-
+import { extractStructureHTML } from '../text-analysis/extractStructure';
 
 /**
  * Analyzes HTML content to extract document structure and readability metrics
@@ -16,46 +12,52 @@ export const parseHTMLDocument = (htmlContent : string) => {
     const document = dom.window.document;
 
     // Extract structure metrics
-    const structure = extractStructure(document);
+    const structure = extractStructureHTML(document);
 
-    // Extract the text content from the DOM
-    const textContent = extractCleanText(document);
+    // Extract the text content from the DOM for analysis
+    const textData = extractTextData(document)
 
+    return {textData, structure}
 } 
 
+export const extractTextData = (document: Document): {
+    paragraphSentences: string[][];
+    fullText: string;
+} => {
+    // Remove non-content elements
+    document.querySelectorAll('script, style, noscript, iframe, nav, header, footer, aside').forEach(el => el.remove());
 
-/**
- * Extracts structural elements from the HTML document
- */
-const extractStructure = (document: Document) : StructureMetrics => {
-    return {
-        headings: document.querySelectorAll('h1, h2, h3, h4, h5, h6').length,
-        lists: document.querySelectorAll('ul, ol, dl').length,
-        bold_instances: document.querySelectorAll('b, strong').length,
-        italic_instances: document.querySelectorAll('i, em').length,
-        links: document.querySelectorAll('a[href]').length,
-        images: document.querySelectorAll('img').length,
-        tables: document.querySelectorAll('table').length,
-    }
-}
+    const contentBlocks = Array.from(document.querySelectorAll('p, div, section, article, li, blockquote'));
+    const paragraphSentences: string[][] = [];
+    const fullTextParts: string[] = [];
 
-const extractCleanText = (document: Document) => {
-
-    const paragraphs = Array.from(document.querySelectorAll('p'));
-    // Remove script and style elements
-    const scripts = document.querySelectorAll('script, style, noscript');
-    scripts.forEach(el => el.remove());
-
-    const results : string[][] = [];
-
-    paragraphs.forEach(p => {
-        const text = p.textContent?.trim() ?? '';
-        if (text) {
-        const sentences = text.match(/[^.!?]+[.!?]+/g) ?? [text];
-            results.push(sentences.map(s => s.trim()));
+    contentBlocks.forEach(el => {
+        const text = el.textContent?.trim() ?? '';
+        if (text && text.length > 10) { 
+            const sentences = text.match(/[^.!?]+[.!?]+/g) ?? [text];
+            const trimmed = sentences.map(s => s.trim());
+            paragraphSentences.push(trimmed);
+            fullTextParts.push(trimmed.join(' '));
         }
     });
 
-    return results;
-}
+    // Fallback: if no blocks detected, pull raw text from <body>
+    if (paragraphSentences.length === 0) {
+        const bodyText = document.body?.textContent?.trim() ?? '';
+        if (bodyText) {
+            const sentences = bodyText.match(/[^.!?]+[.!?]+/g) ?? [bodyText];
+            const trimmed = sentences.map(s => s.trim());
+            paragraphSentences.push(trimmed);
+            fullTextParts.push(trimmed.join(' '));
+        }
+    }
+
+    return {
+        paragraphSentences,
+        fullText: fullTextParts.join(" "),
+    };
+};
+
+
+
 

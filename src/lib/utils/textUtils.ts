@@ -24,3 +24,5 @@ export const countSentences = (text: string): number => {
     const sentences = text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
     return sentences.length;
 }
+
+export const countParagraphs = (paragraphs: string[][]) => paragraphs.length;

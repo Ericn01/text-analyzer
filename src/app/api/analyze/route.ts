@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { writeFile, unlink } from 'fs/promises';
-import AnalyzeText from '@/lib/utils/textAnalysis';
+import AnalyzeText from '@/lib/text-analysis/textAnalysis';
 
 export async function POST(request: NextRequest) {
     try {

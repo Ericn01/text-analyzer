@@ -1,37 +1,33 @@
-import readability from 'automated-readability'
+import {
+    fleschReadingEase,
+    fleschKincaidGrade,
+    smogIndex
+} from 'text-readability';
 import { ReadabilityMetrics } from "@/types/basicAnalytics";
 
-type PayloadTextContent = {
-    type: "paragraph" | "sentence";
-    text: string;
-};
-
-type ReadabilityProps = {
-    textBlocks: PayloadTextContent[];
-};
-
-const calculateReadability = ({textBlocks} : ReadabilityProps) : ReadabilityMetrics => {
-    const textCombined = textBlocks.map( (payloadText) => payloadText.text).join(". ");
-    const metrics = readability(textCombined);
+const calculateReadability = (text: string) : ReadabilityMetrics => {
+    const fre = fleschReadingEase(text);
+    const fk = fleschKincaidGrade(text);
+    const smog = smogIndex(text);
 
     return {
         flesch_reading_ease: {
-            score: Math.round(metrics.fleschReadingEase * 10) / 10,
-            description: getFleschDescription(metrics.fleschReadingEase),
-            percentage: Math.round(metrics.fleschReadingEase)
+            score: Math.round(fre * 10) / 10,
+            description: getFleschDescription(fre),
+            percentage: Math.round(fre)
         },
         flesch_kincaid_grade: {
-            score: Math.round(metrics.fleschKincaidGradeLevel * 10) / 10,
-            description: getGradeDescription(metrics.fleschKincaidGradeLevel),
-            percentage: Math.round((metrics.fleschKincaidGradeLevel / 12) * 100)
+            score: Math.round(fk * 10) / 10,
+            description: getGradeDescription(fk),
+            percentage: Math.round((fk / 12) * 100)
         },
         smog_index: {
-            score: Math.round(metrics.smogIndex * 10) / 10,
-            description: getGradeDescription(metrics.smogIndex),
-            percentage: Math.round((metrics.smogIndex / 12) * 100)
+            score: Math.round(smog * 10) / 10,
+            description: getGradeDescription(smog),
+            percentage: Math.round((smog / 12) * 100)
         }
-    }
-}
+    };
+};
 
 /**
  * Gets description for Flesch Reading Ease score
@@ -63,3 +59,5 @@ function getGradeDescription(grade: number): string {
     return "Graduate level";
 }
 
+
+export default calculateReadability;
