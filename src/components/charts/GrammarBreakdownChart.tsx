@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { createPieOptions } from "@/lib/utils/chartStyles";
-import { PartsOfSpeech } from "@/types/visualAnalytics";
+import { PartsOfSpeech } from "../../../types/visualAnalytics";
 import { Pie } from "react-chartjs-2";
 import { ChartContainer } from "../analytics/VisualAnalytics";
 

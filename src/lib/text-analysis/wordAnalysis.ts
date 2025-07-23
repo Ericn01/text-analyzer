@@ -1,4 +1,4 @@
-import { SentenceLengthTrends, PartsOfSpeech, WordFrequencyData } from "@/types/visualAnalytics";
+import { SentenceLengthTrends, PartsOfSpeech, WordFrequencyData } from "../../../types/visualAnalytics";
 import nlp from "compromise";
 import { isStopWord } from "../utils/stopword";
 

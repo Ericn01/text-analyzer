@@ -1,5 +1,5 @@
-import { SentenceLengthTrends } from "@/types/visualAnalytics";
-import { XYDataPoint } from "@/types/coreAnalytics";
+import { SentenceLengthTrends } from "../../../types/visualAnalytics";
+import { XYDataPoint } from "../../../types/coreAnalytics";
 import { useMemo } from "react";
 import { createLineOptions } from "@/lib/utils/chartStyles";
 import { ChartContainer } from "../analytics/VisualAnalytics";

@@ -1,4 +1,4 @@
-import { StructureMetrics } from "@/types/basicAnalytics"
+import { StructureMetrics } from "../../../types/basicAnalytics"
 
 /**
  * Extracts structural elements from the HTML document

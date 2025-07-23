@@ -1,5 +1,5 @@
 import { createBarOptions, chartColors } from "@/lib/utils/chartStyles";
-import { StructureMetrics } from "@/types/basicAnalytics";
+import { StructureMetrics } from "../../../types/basicAnalytics";
 import { ChartContainer } from "../analytics/VisualAnalytics";
 import { formatMetricName } from "@/lib/utils/formatMetric";
 import { Bar } from "react-chartjs-2";

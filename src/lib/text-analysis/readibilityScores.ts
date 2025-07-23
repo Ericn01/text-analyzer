@@ -1,14 +1,10 @@
-import {
-    fleschReadingEase,
-    fleschKincaidGrade,
-    smogIndex
-} from 'text-readability';
-import { ReadabilityMetrics } from "@/types/basicAnalytics";
+import re from 'text-readability';
+import { ReadabilityMetrics } from "../../../types/basicAnalytics";
 
 const calculateReadability = (text: string) : ReadabilityMetrics => {
-    const fre = fleschReadingEase(text);
-    const fk = fleschKincaidGrade(text);
-    const smog = smogIndex(text);
+    const fre = re.fleschReadingEase(text);
+    const fk = re.fleschKincaidGrade(text);
+    const smog = re.smogIndex(text);
 
     return {
         flesch_reading_ease: {
@@ -61,3 +57,4 @@ function getGradeDescription(grade: number): string {
 
 
 export default calculateReadability;
+

@@ -1,6 +1,6 @@
 import { createBarOptions, chartColors } from "@/lib/utils/chartStyles";
 import { ChartContainer } from "../analytics/VisualAnalytics";
-import { WordFrequencyData } from "@/types/visualAnalytics";
+import { WordFrequencyData } from "../../../types/visualAnalytics";
 import { Bar } from "react-chartjs-2";
 
 /* Top 20 words: Bar Chart */

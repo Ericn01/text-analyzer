@@ -1,4 +1,4 @@
-import { TextAnalyticsResponse } from "./types/analyticsResponse";
+import { TextAnalyticsResponse } from "../types/analyticsResponse";
 
 export const analyticsData : TextAnalyticsResponse = {
   "success": true,

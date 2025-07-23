@@ -1,6 +1,6 @@
 import { createBarOptions, chartColors } from "@/lib/utils/chartStyles";
 import { ChartContainer } from "../analytics/VisualAnalytics";
-import { WordLengthDistribution } from "@/types/visualAnalytics";
+import { WordLengthDistribution } from "../../../types/visualAnalytics";
 import { Bar } from "react-chartjs-2";
 
 /* Word Length Distribution: Histogram */

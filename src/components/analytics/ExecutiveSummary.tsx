@@ -1,6 +1,6 @@
 
 import { randomUUID } from 'crypto';
-import { AnalyticsSummary, DocumentInfo } from '../../types/basicAnalytics';
+import { AnalyticsSummary, DocumentInfo } from '../../../types/basicAnalytics';
 import { SectionHeader } from './Results';
 
 

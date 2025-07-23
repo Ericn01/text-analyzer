@@ -1,8 +1,8 @@
 "use client";
 import { SectionHeader } from "./Results"
 import { useState } from "react";
-import { OverviewMetrics, StructureMetrics, ReadabilityMetrics, ReadabilityMetric } from "@/types/basicAnalytics";
-import { WordFrequencyData, WordLengthDistribution } from "@/types/visualAnalytics";
+import { OverviewMetrics, StructureMetrics, ReadabilityMetrics, ReadabilityMetric } from "../../../types/basicAnalytics";
+import { WordFrequencyData, WordLengthDistribution } from "../../../types/visualAnalytics";
 import { WordFrequencyChart } from "../charts/WordFrequencyChart";
 import { formatMetricName } from "@/lib/utils/formatMetric";
 import { StructureChart } from "../charts/StructureChart";

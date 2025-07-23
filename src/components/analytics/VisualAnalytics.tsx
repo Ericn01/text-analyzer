@@ -12,7 +12,7 @@ PointElement,
 ArcElement,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { PartsOfSpeech, SentenceLengthTrends, VisualAnalytics, WordFrequencyData, WordLengthDistribution } from '@/types/visualAnalytics';
+import { PartsOfSpeech, SentenceLengthTrends, VisualAnalytics, WordFrequencyData, WordLengthDistribution } from '../../../types/visualAnalytics';
 import { WordFrequencyChart} from '../charts/WordFrequencyChart';
 import { WordLengthChart } from '../charts/WordLengthChart';
 import { SentenceLengthTrendChart } from '../charts/SentenceLengthTrendChart';

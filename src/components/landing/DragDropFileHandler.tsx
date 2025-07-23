@@ -13,26 +13,23 @@ export default function DragDropFileHandler() {
         // Move to the waiting page
         router.push("/analyzing");
         try {
-            // Creating a FormData object to send the file
             const formData = new FormData();
             formData.append('file', file);
 
-            // Upload the file to the backend
             const response = await fetch("/api/analyze", {
                 method: "POST",
-                body: file,
+                body: formData, 
             });
 
             const result = await response.json();
+            console.log(result)
         }
-
         catch (err) {
             console.error("Upload error: ", err);
             setError(err instanceof Error ? err.message : 'Upload failed');
         } finally {
             setIsUploading(false);
         }
-        
     }
 
     const handleDrop = (e: React.DragEvent) => {
