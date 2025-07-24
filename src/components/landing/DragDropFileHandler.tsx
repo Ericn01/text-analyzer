@@ -1,17 +1,46 @@
 import { useState, useRef } from "react";
-import { UploadCloud } from "lucide-react";
+import { UploadCloud, FileText, AlertCircle, CheckCircle, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+interface UploadState {
+    status: 'idle' | 'uploading' | 'success' | 'error';
+    progress: number;
+    error: string | null;
+    fileName: string | null;
+}
+
+interface ErrorResponse {
+    error: string;
+    code: string;
+    details?: string;
+    fileType?: string;
+    statusCode?: number;
+}
+
 export default function DragDropFileHandler() {
+    const defaultUploadState : UploadState = {
+        status: 'idle',
+        progress: 0,
+        error: null,
+        fileName: null
+    }
+
     const [isDragging, setIsDragging] = useState(false);
     const [error, setError] = useState('');
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadState, setUploadState] = useState<UploadState>(defaultUploadState);
+
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
+    const resetUploadState = () => setUploadState({...defaultUploadState});
+
     const handleUpload = async (file: File) => {
-        // Move to the waiting page
-        router.push("/analyzing");
+        // Resetting any previous error
+        resetUploadState();
+
+        // Navigate to analyzing page immediately
+        router.push(`/analyzing?fileName=${encodeURIComponent(file.name)}`);
         try {
             const formData = new FormData();
             formData.append('file', file);
@@ -21,8 +50,9 @@ export default function DragDropFileHandler() {
                 body: formData, 
             });
 
-            const result = await response.json();
-            console.log(result)
+            if (!response.ok){
+                console.error('Upload failed: ', response.status);
+            }
         }
         catch (err) {
             console.error("Upload error: ", err);
@@ -49,25 +79,56 @@ export default function DragDropFileHandler() {
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
             'text/plain',
             'text/html'];
-        const maxSize = 10 * 1024 * 1024;
+
+        const maxSize = 10 * 1024 * 1024; // 10MB
         
         const isValidType = validTypes.includes(file.type);
         const isValidSize = file.size <= maxSize;
 
+
         if (!isValidType) {
-            setError('File must be of type PDF, DOCX, TXT, or HTML');
+            setUploadState(prev => ({
+                ...prev,
+                status: 'error',
+                error: 'File must be PDF, DOCX, TXT, or HTML format'
+            }));
             return false;
+        
         } 
         if (!isValidSize) {
-            setError('File size must be below 10MB')
+            setUploadState(prev => ({
+                ...prev,
+                status: 'error',
+                error: `File size must be under ${Math.round(maxSize / 1024 / 1024)}MB (current: ${Math.round(file.size / 1024 / 1024)}MB)`
+            }));
             return false;
         }
         return true;
     };
 
     const handleBrowseClick = () => {
+        if (uploadState.status === 'uploading') return;
         inputRef.current?.click();
     };
+
+    const handleRetry = () => {
+        resetUploadState();
+    };
+
+    const getStatusData = () => {
+        switch(uploadState.status){
+            case 'uploading':
+                return <Loader2 className="h-16 w-16 text-blue-400 animate-spin" />;
+            case 'success':
+                return <CheckCircle className="h-16 w-16 text-green-400" />;
+            case 'error':
+                return <AlertCircle className="h-16 w-16 text-red-400" />;
+            default:
+                return <UploadCloud className={`h-16 w-16 ${isDragging ? "text-blue-300 animate-bounce" : "text-white/70"}`} />;
+        }
+    };
+
+
 
     return (
         <div

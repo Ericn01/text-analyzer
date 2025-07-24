@@ -40,20 +40,5 @@ const AnalyzeText = async ({structure, textData} : AnalyzeTextProps) => {
     }
 }
 
-interface NLPResponse {
-    sentiment_analysis: SentimentAnalysis,
-    keyword_extraction: KeywordExtraction,
-    topic_modeling: TopicModeling,
-    language_patterns: LanguagePatterns
-}
-
-const nlpAnalysis = async (requestPath: string) : Promise<NLPResponse> => {
-    const request = await fetch(requestPath);
-    if (!request.ok){
-        throw new Error("Could not retrieve data from API.")
-    }
-    const nlpAnalysis = await request.json();
-    return nlpAnalysis;
-}
 
 export default AnalyzeText;
