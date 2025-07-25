@@ -1,8 +1,8 @@
 import { StructureMetrics } from "../../../types/basicAnalytics";
+import { getBasicOverview } from "../utils/textUtils";
 // Controller function for the Node.js part of the analysis
 import calculateReadability from "./readibilityScores";
-import { analyzeWordFrequency, getPartsOfSpeechBreakdown, getSentenceLengthTrends } from "./wordAnalysis";
-import { SentimentAnalysis, KeywordExtraction, TopicModeling, LanguagePatterns } from "../../../types/advancedAnalytics";
+import { analyzeWordFrequency, getPartsOfSpeechBreakdown, getSentenceLengthTrends, getWordLengthDistribution } from "./wordAnalysis";
 
 
 type AnalyzeTextProps = {
@@ -13,32 +13,32 @@ type AnalyzeTextProps = {
     }
 }
 
-const AnalyzeText = async ({structure, textData} : AnalyzeTextProps) => {
+const analyzeText = async ({structure, textData} : AnalyzeTextProps) => {
     const {paragraphSentences, fullText} = textData;
-    
-    // Dependent on the type of document for parsing
-    const structureData = structure;
+
+    // Overview extraction 
+    const overview = getBasicOverview(paragraphSentences, fullText);
     // Reading level extraction
     const readability = calculateReadability(fullText);
 
     // Chart data extraction 
     const wordFrequency = analyzeWordFrequency(fullText);
+    const wordLengthDistribution = getWordLengthDistribution(fullText)
     const sentenceLengthTrends = getSentenceLengthTrends(paragraphSentences);
     const partsOfSpeech = getPartsOfSpeechBreakdown(fullText);
 
     return {
         "basic_analytics": {
+            overview,
             structure,
             readability
         },
         "visual_analytics": {
             wordFrequency,
-            // have to add word length distri
+            wordLengthDistribution,
             sentenceLengthTrends,
             partsOfSpeech
         }
     }
 }
-
-
-export default AnalyzeText;
+export default analyzeText;

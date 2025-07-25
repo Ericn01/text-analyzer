@@ -1,21 +1,8 @@
 import { useState, useRef } from "react";
 import { UploadCloud, FileText, AlertCircle, CheckCircle, Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-interface UploadState {
-    status: 'idle' | 'uploading' | 'success' | 'error';
-    progress: number;
-    error: string | null;
-    fileName: string | null;
-}
-
-interface ErrorResponse {
-    error: string;
-    code: string;
-    details?: string;
-    fileType?: string;
-    statusCode?: number;
-}
+import { UploadState } from "../../../types/fileUpload";
+import { useFileUpload } from "@/context/FileUploadContext";
 
 export default function DragDropFileHandler() {
     const defaultUploadState : UploadState = {
@@ -26,41 +13,13 @@ export default function DragDropFileHandler() {
     }
 
     const [isDragging, setIsDragging] = useState(false);
-    const [error, setError] = useState('');
-    const [isUploading, setIsUploading] = useState(false);
     const [uploadState, setUploadState] = useState<UploadState>(defaultUploadState);
 
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
+    const { setFile } = useFileUpload(); // file upload context
 
     const resetUploadState = () => setUploadState({...defaultUploadState});
-
-    const handleUpload = async (file: File) => {
-        // Resetting any previous error
-        resetUploadState();
-
-        // Navigate to analyzing page immediately
-        router.push(`/analyzing?fileName=${encodeURIComponent(file.name)}`);
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const response = await fetch("/api/analyze", {
-                method: "POST",
-                body: formData, 
-            });
-
-            if (!response.ok){
-                console.error('Upload failed: ', response.status);
-            }
-        }
-        catch (err) {
-            console.error("Upload error: ", err);
-            setError(err instanceof Error ? err.message : 'Upload failed');
-        } finally {
-            setIsUploading(false);
-        }
-    }
 
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
@@ -69,7 +28,8 @@ export default function DragDropFileHandler() {
 
         const file = e.dataTransfer.files?.[0];
         if (file && validateFile(file)) {
-            handleUpload(file)
+            setFile(file);
+            router.push(`/analyzing`);
         }
     };
 
@@ -85,7 +45,6 @@ export default function DragDropFileHandler() {
         const isValidType = validTypes.includes(file.type);
         const isValidSize = file.size <= maxSize;
 
-
         if (!isValidType) {
             setUploadState(prev => ({
                 ...prev,
@@ -93,8 +52,8 @@ export default function DragDropFileHandler() {
                 error: 'File must be PDF, DOCX, TXT, or HTML format'
             }));
             return false;
-        
         } 
+
         if (!isValidSize) {
             setUploadState(prev => ({
                 ...prev,
@@ -115,8 +74,8 @@ export default function DragDropFileHandler() {
         resetUploadState();
     };
 
-    const getStatusData = () => {
-        switch(uploadState.status){
+    const getStatusIcon = () => {
+        switch (uploadState.status) {
             case 'uploading':
                 return <Loader2 className="h-16 w-16 text-blue-400 animate-spin" />;
             case 'success':
@@ -126,57 +85,139 @@ export default function DragDropFileHandler() {
             default:
                 return <UploadCloud className={`h-16 w-16 ${isDragging ? "text-blue-300 animate-bounce" : "text-white/70"}`} />;
         }
+    }
+
+    const getStatusText = () => {
+        switch (uploadState.status) {
+            case 'uploading':
+                return `Uploading ${uploadState.fileName}...`;
+            case 'success':
+                return 'Upload successful! Redirecting...';
+            case 'error':
+                return 'Upload failed';
+            default:
+                return isDragging ? "Drop your file here" : "Drag & drop your document or click to upload";
+        }
     };
 
-
+    const isDisabled = uploadState.status === 'uploading' || uploadState.status === 'success';
 
     return (
-        <div
-            className={`w-full max-w-2xl mx-auto px-6 py-16 border-2 border-dashed rounded-2xl transition-colors duration-300
-                ${isDragging ? 'border-blue-400 bg-blue-100/30' : 'border-white/30 bg-white/10'}
-                ${isUploading ? 'pointer-events-none opacity-75' : ''}
-            `}
-            onDragOver={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsDragging(true);
-            }}
-            onDragLeave={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsDragging(false);
-            }}
-            onDrop={handleDrop}
-        >
-            <div className="flex flex-col items-center justify-center text-white gap-4">
-                <UploadCloud className={`h-13 w-13 ${isDragging ? "text-blue-300 animate-bounce" : "text-white/70"}`} />
-                <p className="text-xl font-semibold">
-                    {isDragging ? "Drop your file here" : "Drag & drop your document or click to upload"}
-                </p>
-                <button
-                    onClick={handleBrowseClick}
-                    className="mt-4 px-6 py-2 rounded-full bg-blue-500 hover:bg-blue-600 transition cursor-pointer"
-                    >
-                    Browse Files
-                </button>
-                <input
-                    ref={inputRef}
-                    type="file"
-                    hidden
-                    accept=".pdf,.docx,.txt,.html"
-                    onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file && validateFile(file)) {
-                            handleUpload(file);
-                        } 
-                    }}
-                />
-                {error && (
-                    <div className="text-red-400 text-sm font-bold mt-2 p-2 bg-red-900/20 rounded-md">
-                        {error}
+        <div className="w-full max-w-2xl mx-auto space-y-4">
+            <div
+                className={`px-6 py-16 border-2 border-dashed rounded-2xl transition-all duration-300 ${
+                    isDragging 
+                        ? 'border-blue-400 bg-blue-100/30 scale-[1.02]' 
+                        : uploadState.status === 'error'
+                        ? 'border-red-400 bg-red-100/10'
+                        : uploadState.status === 'success'
+                        ? 'border-green-400 bg-green-100/10'
+                        : 'border-white/30 bg-white/10'
+                } ${
+                    isDisabled ? 'pointer-events-none' : ''
+                }`}
+                onDragOver={(e) => {
+                    if (isDisabled) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(true);
+                }}
+                onDragLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDragging(false);
+                }}
+                onDrop={handleDrop}
+            >
+                <div className="flex flex-col items-center justify-center text-white gap-6">
+                    {getStatusIcon()}
+                    
+                    <div className="text-center space-y-2">
+                        <p className="text-xl font-semibold">
+                            {getStatusText()}
+                        </p>
+                        
+                        {uploadState.status === 'uploading' && (
+                            <div className="w-64 bg-white/20 rounded-full h-2 mx-auto">
+                                <div 
+                                    className="bg-blue-400 h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${uploadState.progress}%` }}
+                                />
+                            </div>
+                        )}
+
+                        {uploadState.status === 'idle' && (
+                            <p className="text-sm text-white/60">
+                                Supports PDF, DOCX, TXT, and HTML files up to 10MB
+                            </p>
+                        )}
                     </div>
-                )}
+
+                    {uploadState.status === 'idle' && (
+                        <button
+                            onClick={handleBrowseClick}
+                            className="px-6 py-3 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors duration-200 font-medium"
+                        >
+                            Browse Files
+                        </button>
+                    )}
+
+                    {uploadState.status === 'error' && (
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleRetry}
+                                className="px-6 py-3 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors duration-200 font-medium"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    )}
+
+                    <input
+                        ref={inputRef}
+                        type="file"
+                        hidden
+                        accept=".pdf,.docx,.txt,.html"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file && validateFile(file)) {
+                                setFile(file);
+                                router.push(`/analyzing`);
+                            }
+                            // Clear the input so the same file can be uploaded again
+                            e.target.value = '';
+                        }}
+                    />
+                </div>
             </div>
+
+            {/* Error display */}
+            {uploadState.error && (
+                <div className="bg-red-900/20 border border-red-400/30 rounded-xl p-4 flex items-start gap-3">
+                    <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                        <p className="text-red-400 font-medium">Error</p>
+                        <p className="text-red-300 text-sm mt-1">{uploadState.error}</p>
+                    </div>
+                    <button
+                        onClick={() => setUploadState(prev => ({ ...prev, error: null }))}
+                        className="text-red-400 hover:text-red-300 transition-colors"
+                    >
+                        <X className="h-4 w-4" />
+                    </button>
+                </div>
+            )}
+
+            {/* File info display during upload */}
+            {uploadState.fileName && uploadState.status === 'uploading' && (
+                <div className="bg-white/10 rounded-xl p-4 flex items-center gap-3">
+                    <FileText className="h-5 w-5 text-white/70" />
+                    <div className="flex-1">
+                        <p className="text-white font-medium text-sm">{uploadState.fileName}</p>
+                        <p className="text-white/60 text-xs">Processing document...</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

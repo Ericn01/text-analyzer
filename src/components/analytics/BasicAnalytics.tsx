@@ -17,11 +17,12 @@ type BasicAnalyticsProps = {
 }
 
 const BasicAnalytics = ({
-    overviewData, 
-    structureData, 
-    readabilityData, 
+    overviewData,
+    structureData,
+    readabilityData,
     wordFrequencyData,
-    wordLengthData} : BasicAnalyticsProps) => {
+    wordLengthData
+}: BasicAnalyticsProps) => {
 
     type TabType = 'overview' | 'structure' | 'readability';
     const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -34,19 +35,19 @@ const BasicAnalytics = ({
     ];
 
     const renderContent = () => {
-        switch(activeTab){
+        switch (activeTab) {
             case 'overview':
                 return (
-                    <OverviewTab 
-                            overviewData={overviewData}
-                            wordFrequencyData={wordFrequencyData}
-                        />
+                    <OverviewTab
+                        overviewData={overviewData}
+                        wordFrequencyData={wordFrequencyData}
+                    />
                 );
             case 'structure':
-                return <StructureTab structureData={structureData}/>
+                return <StructureTab structureData={structureData} />
             case 'readability':
-                return <ReadabilityTab readabilityData={readabilityData}/>
-            default: 
+                return <ReadabilityTab readabilityData={readabilityData} />
+            default:
                 return null;
         }
     }
@@ -54,23 +55,23 @@ const BasicAnalytics = ({
     return (
         <article id="basic" className="w-full max-w-6xl mx-auto mb-7">
             <SectionHeader sectionName="Basic Analytics" />
-            
+
             <div className="flex gap-1 mb-6 rounded-lg p-1 bg-gray-100 w-fit">
                 {tabs.map(tab => (
-                    <button 
+                    <button
                         onClick={() => setActiveTab(tab.id)}
                         key={tab.id}
                         className={`px-4 py-2 font-medium text-sm rounded-md transition-all duration-200 min-w-[100px]
-                        ${activeTab === tab.id 
-                            ? 'bg-white text-blue-600 shadow-sm' 
-                            : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                        }`}
-                    > 
+                        ${activeTab === tab.id
+                                ? 'bg-white text-blue-600 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                            }`}
+                    >
                         {tab.label}
                     </button>
                 ))}
             </div>
-            
+
             <div className="transition-all duration-300">
                 {renderContent()}
             </div>
@@ -78,20 +79,20 @@ const BasicAnalytics = ({
     )
 }
 
-
-
-
-const OverviewTab = ({ 
-    overviewData, 
-    wordFrequencyData,  
-}: { 
+const OverviewTab = ({
+    overviewData,
+    wordFrequencyData,
+}: {
     overviewData: OverviewMetrics;
     wordFrequencyData: WordFrequencyData;
-}) => {    
+}) => {
 
     const formatMetricValue = (key: string, value: number) => {
-        if (key === 'averageWordsPerSentence') {
+        if (key === 'average_words_per_sentence') {
             return value.toFixed(1);
+        }
+        if (key === 'lexical_diversity') {
+            return (value * 100).toFixed(1) + '%';
         }
         return value.toLocaleString();
     };
@@ -104,13 +105,12 @@ const OverviewTab = ({
                     <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
                         <h3 className="text-lg font-semibold text-gray-800">Document Metrics</h3>
                     </div>
-                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div className="bg-white">
                         {Object.entries(overviewData).map(([metric, value], index) => (
-                            <div 
-                                key={metric} 
-                                className={`flex justify-between items-center px-4 py-3 ${
-                                    index !== Object.entries(overviewData).length - 1 ? 'border-b border-gray-100' : ''
-                                }`}
+                            <div
+                                key={metric}
+                                className={`flex justify-between items-center px-4 py-3 ${index !== Object.entries(overviewData).length - 1 ? 'border-b border-gray-100' : ''
+                                    }`}
                             >
                                 <span className="text-gray-700 font-medium">
                                     {formatMetricName(metric)}
@@ -122,8 +122,6 @@ const OverviewTab = ({
                         ))}
                     </div>
                 </div>
-
-                
             </div>
 
             {/* Right side: Chart */}
@@ -142,24 +140,23 @@ const StructureTab = ({ structureData }: { structureData: StructureMetrics }) =>
                     <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
                         <h3 className="text-lg font-semibold text-gray-800">Document Structure</h3>
                     </div>
-                    {Object.entries(structureData).map(([metric, value], index) => (
-                        <div 
-                            key={metric} 
-                            className={`flex justify-between items-center px-4 py-3 ${
-                                index !== Object.entries(structureData).length - 1 ? 'border-b border-gray-100' : ''
-                            }`}
-                        >
-                            <span className="text-gray-700 font-medium">
-                                {formatMetricName(metric)}
-                            </span>
-                            <span className="text-gray-900 font-semibold">
-                                {value.toLocaleString()}
-                            </span>
-                        </div>
-                    ))}
-            </div>
-
-                
+                    <div className="bg-white">
+                        {Object.entries(structureData).map(([metric, value], index) => (
+                            <div
+                                key={metric}
+                                className={`flex justify-between items-center px-4 py-3 ${index !== Object.entries(structureData).length - 1 ? 'border-b border-gray-100' : ''
+                                    }`}
+                            >
+                                <span className="text-gray-700 font-medium">
+                                    {formatMetricName(metric)}
+                                </span>
+                                <span className="text-gray-900 font-semibold">
+                                    {value.toLocaleString()}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
             {/* Right side: Chart */}
             <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -175,7 +172,7 @@ const ReadabilityTab = ({ readabilityData }: { readabilityData: ReadabilityMetri
             <h3 className="text-xl font-bold text-gray-800">Readability Metrics</h3>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {Object.entries(readabilityData).map(([metricName, metricData]) => (
-                    <ReadabilityCard 
+                    <ReadabilityCard
                         key={metricName}
                         metricName={metricName}
                         readabilityData={metricData}
@@ -186,12 +183,11 @@ const ReadabilityTab = ({ readabilityData }: { readabilityData: ReadabilityMetri
     );
 };
 
-
-const ReadabilityCard = ({ 
-    metricName, 
-    readabilityData 
-}: { 
-    metricName: string; 
+const ReadabilityCard = ({
+    metricName,
+    readabilityData
+}: {
+    metricName: string;
     readabilityData: ReadabilityMetric;
 }) => {
     const getScoreColor = (percentage: number) => {
@@ -207,7 +203,7 @@ const ReadabilityCard = ({
     };
 
     return (
-        <div id="basic" className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
             <div className="text-center">
                 <h4 className="text-lg font-semibold text-gray-800 mb-3">
                     {formatMetricName(metricName, true)}
@@ -219,7 +215,7 @@ const ReadabilityCard = ({
                     {readabilityData.description}
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                    <div 
+                    <div
                         className={`h-2 rounded-full transition-all duration-500 ${getBarColor(readabilityData.percentage)}`}
                         style={{ width: `${Math.min(readabilityData.percentage, 100)}%` }}
                     ></div>
@@ -231,9 +227,5 @@ const ReadabilityCard = ({
         </div>
     );
 };
-
-
-
-
 
 export default BasicAnalytics;

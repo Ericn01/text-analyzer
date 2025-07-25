@@ -1,10 +1,10 @@
-import { SentenceLengthTrends, PartsOfSpeech, WordFrequencyData } from "../../../types/visualAnalytics";
+import { SentenceLengthTrends, PartsOfSpeech, WordFrequencyData, WordLengthDistribution } from "../../../types/visualAnalytics";
 import nlp from "compromise";
 import { isStopWord } from "../utils/stopword";
+import { getWords } from "../utils/textUtils";
 
 export const analyzeWordFrequency = (text : string) : WordFrequencyData => {
-    // convert to lowercase and extract words only
-    const words = text.toLowerCase().match(/\b[a-zA-Z']+\b/g);
+    const words = getWords(text);
 
     const wordCount = new Map<string, number>();
 
@@ -40,6 +40,50 @@ export const analyzeWordFrequency = (text : string) : WordFrequencyData => {
             chart_data
         }
 
+}
+
+export const getWordLengthDistribution = (text: string) : WordLengthDistribution => {
+    const words = getWords(text);
+
+    const wordLengths = new Map<string, number>();
+
+    const setWordLength = (lengthRange : string) => wordLengths.set(lengthRange, (wordLengths.get(lengthRange) || 0) + 1)
+
+    for (const word of words) {
+        const len = word.length;
+        if (len > 0 && len < 4){
+            setWordLength("1-3");
+        } else if (len < 7){
+            setWordLength("4-6");
+        } else if (len < 10){
+            setWordLength("7-9");
+        }  else if (len < 13){
+            setWordLength("10-12");
+        } else if (len > 13){
+            setWordLength("13+");
+        }
+    }
+
+    const wordLengthsArray =  Array.from(wordLengths.entries());
+
+    const buckets = wordLengthsArray.map(([length, count]) => (
+        {
+        length,
+        count,
+        percentage: Number(((count / words.length) * 100).toFixed(2))
+    }));
+
+    const chart_data = wordLengthsArray.map(([length, count]) => (
+        {
+        label: `${length} chars`,
+        value: count
+        }
+    ));
+
+    return {
+        buckets,
+        chart_data
+    }
 }
 
 

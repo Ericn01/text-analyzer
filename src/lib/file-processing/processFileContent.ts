@@ -4,11 +4,17 @@ import fs from 'fs/promises';
 import path from 'path';
 import { writeFile, unlink } from 'fs/promises';
 import { randomUUID } from 'crypto'; // Add this import
+import convertDocxToHTML from "./docxParser";
 
 
 export const processFileContent = async (filePath: string, fileType: string) => {
     try {
         switch (fileType) {
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                const buffer = await fs.readFile(filePath);
+                const htmlContent = await convertDocxToHTML(buffer);
+                return parseHTMLDocument(htmlContent.value);
+
             case 'text/html':
             case 'text/plain':
                 const content = await fs.readFile(filePath, 'utf8');
@@ -16,9 +22,6 @@ export const processFileContent = async (filePath: string, fileType: string) => 
 
             case 'application/pdf':
                 throw new FileProcessingError('PDF analysis not implemented yet', fileType);
-
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                throw new FileProcessingError('DOCX analysis not implemented yet', fileType);
 
             default:
                 throw new FileProcessingError(`Unsupported file type: ${fileType}`, fileType);
@@ -45,41 +48,6 @@ export const createTempFile = async (file: File): Promise<string> => {
     } catch (error) {
         throw new FileProcessingError(`Failed to create temp file: ${error.message}`, file.type);
     }
-};
-
-
-// Validation function
-export const validateFileUpload = (file: File) => {
-    const validTypes = [
-        'text/html',
-        'text/plain', 
-        'application/pdf',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-
-    if (!validTypes.includes(file.type)) {
-        return { 
-            isValid: false, 
-            error: `Unsupported file type: ${file.type}. Supported types: HTML, TXT, PDF, DOCX` 
-        };
-    }
-    
-    if (file.size > config.maxFileSize) {
-        return { 
-            isValid: false, 
-            error: `File too large: ${Math.round(file.size / 1024 / 1024)}MB (max: ${Math.round(config.maxFileSize / 1024 / 1024)}MB)` 
-        };
-    }
-    
-    // Basic filename validation
-    if (file.name.includes('..') || file.name.includes('/') || file.name.includes('\\')) {
-        return {
-            isValid: false,
-            error: 'Invalid filename characters detected'
-        };
-    }
-    
-    return { isValid: true };
 };
 
 // Safe cleanup function

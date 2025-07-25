@@ -1,16 +1,14 @@
 // app/api/analyze/route.ts (Modern App Router API Route)
 import { NextRequest, NextResponse } from 'next/server';
-import AnalyzeText from '@/lib/text-analysis/textAnalysis';
+import analyzeText from '@/lib/text-analysis/textAnalysis';
 import { randomUUID } from 'crypto';
-import getNLPAnalysis from '@/lib/file-processing/nlpAnalysisRequest';
+import { getNLPAnalysis } from '@/lib/file-processing/nlpAnalysisRequest';
 import { FileProcessingError, NLPServiceError } from '@/lib/file-processing/errorProcessing';
 import { createTempFile, 
         processFileContent, 
-        validateFileUpload, 
         safeCleanup, 
         config } 
 from '@/lib/file-processing/processFileContent';
-
 
 export async function POST(request: NextRequest) {
     // set temporary file path as null for now
@@ -20,6 +18,7 @@ export async function POST(request: NextRequest) {
     try {
         // Get form data from request
         const formData = await request.formData();
+
         const file = formData.get('file') as File;
         
         if (!file) {
@@ -29,25 +28,16 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const validation = validateFileUpload(file);
-        if (!validation.isValid) {
-            return NextResponse.json(
-                { error: validation.error, code: 'INVALID_FILE'},
-                { status: 400}
-            );
-        }
-
         tempFilePath = await createTempFile(file);
 
         // Processing/parsing file content (depending on the file type)
-        const parsedDocument = processFileContent(tempFilePath, file.type);
+        const parsedDocument = await processFileContent(tempFilePath, file.type);
 
-        // Get document metadata 
-        const metadata = getDocumentMetadata(file)
+        // Get document basic doc information (metadata) 
+        const documentInfo = getDocumentInfo(file)
 
-    
         // Perform basic analysis
-        const basicAnalysisData = await AnalyzeText(parsedDocument);
+        const {basic_analytics, visual_analytics} = await analyzeText(parsedDocument);
 
         // Extract full document text for NLP analysis
         const fullText = parsedDocument.textData.fullText;
@@ -56,10 +46,28 @@ export async function POST(request: NextRequest) {
         const nlpAnalysisData = await getNLPAnalysis({
             nlpAnalysisUrl: config.nlpServiceUrl,
             fullText
-        });
+        });  
 
-        console.log(`BASIC ANALYSIS:\n${"=".repeat(20)}\n`, basicAnalysisData);
-        console.log(`\nNLP ANALYSIS:\n${"=".repeat(20)}\n`, nlpAnalysisData);
+         // Calculate summary fields from existing data
+        const totalWords = basic_analytics.overview.total_words;
+        const readingTimeMinutes = Math.ceil(totalWords / 200); // Average reading speed
+        const sentimentScore = nlpAnalysisData.sentiment_analysis.overall_sentiment.score;
+        const readingLevel = basic_analytics.readability.flesch_kincaid_grade.score;
+        const writingStyle = getWritingStyle(nlpAnalysisData.language_patterns.stylistic_features.formal_language_score, readingLevel)
+        const keyTopics = nlpAnalysisData.topic_modeling.primary_topics
+            .slice(0, 5)
+            .map(topic => topic.name.replace(/^Topic \d+: /, ''));
+        const complexityLevel = basic_analytics.readability.flesch_reading_ease.description;
+
+        const summaryData =  {
+            total_words: totalWords,
+            reading_time_minutes: readingTimeMinutes,
+            sentiment_score: sentimentScore,
+            reading_level: readingLevel,
+            writing_style: writingStyle,
+            key_topics: keyTopics,
+            complexity_level: complexityLevel
+        };
 
         // Remove temporary files
         await safeCleanup(tempFilePath);
@@ -70,15 +78,29 @@ export async function POST(request: NextRequest) {
             
         return NextResponse.json({
             success: true,
-            metadata: metadata,
             timestamp: new Date().toISOString(),
-            processingTimeMs: Date.now() - startTime,
-            analysisId,
-            basicAnalysisData,
-            nlpAnalysisData,
-            filename: file.name,
-            fileSize: file.size,
+            processing_time_ms: Date.now() - startTime,
+            document: documentInfo,
+            summary: summaryData,
+            basic_analytics: basic_analytics,
+            visual_analytics: visual_analytics,
+            advanced_features: {
+                sentiment_analysis: nlpAnalysisData.sentiment_analysis,
+                keyword_extraction: nlpAnalysisData.keyword_extraction,
+                topic_modeling: nlpAnalysisData.topic_modeling,
+                language_patterns: nlpAnalysisData.language_patterns
+            },
+            metadata: {
+                analysis_id: analysisId,
+                file_info: {
+                    filename: file.name,
+                    file_size: file.size,
+                    original_name: documentInfo.originalName,
+                    upload_time: documentInfo.uploadedAt
+                }
+            }
         });
+
             
         } catch (error) {
             if (tempFilePath){
@@ -91,8 +113,9 @@ export async function POST(request: NextRequest) {
     }
 }
 
+
 // Metadata extraction
-const getDocumentMetadata = (file: File) => {
+const getDocumentInfo = (file: File) => {
     return {
         filename: file.name,
         originalName: file.name,
@@ -102,6 +125,15 @@ const getDocumentMetadata = (file: File) => {
         category: getFileCategory(file.type),
     };
 }
+
+ // Determine writing style based on formality and complexity
+const getWritingStyle = (formalScore: number, complexityScore: number): string => {
+    if (formalScore > 0.7) return "Formal Academic";
+    if (formalScore > 0.4) return "Professional";
+    if (complexityScore > 15) return "Technical";
+    if (complexityScore > 10) return "Intermediate";
+    return "Conversational";
+};
 
 const getFileCategory = (mimeType: string): string => {
     switch (mimeType) {

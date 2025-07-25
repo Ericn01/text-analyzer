@@ -155,7 +155,6 @@ export const SentenceLengthTrendChart = ( {sentenceLengthData} : {sentenceLength
                         borderWidth: 2,
                         borderDash: [5, 5],
                     };
-                    console.log(acc)
                     return acc;
                 }, {} as Record<string, any>)
             } : undefined // Does not appear to work as of right now

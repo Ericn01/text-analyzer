@@ -15,10 +15,9 @@ interface NLPResponse {
     language_patterns: LanguagePatterns
 }
 
-const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps) : Promise<NLPResponse> => {
+export const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps) : Promise<NLPResponse> => {
     const controller = new AbortController();
     const timeoutId = setTimeout( () => controller.abort, config.requestTimeout); 
-
 
     try {
         const response = await fetch(nlpAnalysisUrl, {
@@ -27,7 +26,7 @@ const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps) : Prom
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({ text: fullText }),
+            body: JSON.stringify({text: fullText}),
             signal: controller.signal,
         });
 
@@ -77,6 +76,3 @@ const isValidNLPResponse = (response: any): response is NLPResponse => {
 };
 
 
-
-
-export default getNLPAnalysis;

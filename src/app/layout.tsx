@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from 'next/font/google'
+import { FileUploadProvider } from "@/context/FileUploadContext";
 import "./globals.css";
 
 
@@ -22,7 +23,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${mono.variable} antialiased`}
       >
-        {children}
+        <FileUploadProvider>
+          {children}
+        </FileUploadProvider>
       </body>
     </html>
   );
