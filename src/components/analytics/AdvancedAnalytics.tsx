@@ -10,6 +10,8 @@ import {
 } from "../../../types/advancedAnalytics";
 import { SectionHeader } from "./Results";
 import TextStats from "./TextStats";
+import SentimentSection from "./nlpComponents/SentimentAnalysis";
+import KeywordsSection from "./nlpComponents/KeywordsSection";
 
 type AdvancedFeaturesProps = {
     sentiment: SentimentAnalysis;
@@ -23,7 +25,7 @@ type AdvancedFeaturesProps = {
 const AccordionItem = ({ title, children }: { title: string; children: React.ReactNode }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
-        <div className="border border-gray-300 rounded-lg mb-4 overflow-hidden">
+        <div className={`border border-gray-300 rounded-lg mb-4 overflow-hidden `}>
             <button
                 className="w-full text-lg text-left bg-[#f8f9ff] px-5 py-4 font-semibold hover:bg-[#eef2ff] transition-all"
                 onClick={() => setIsOpen(!isOpen)}
@@ -35,66 +37,6 @@ const AccordionItem = ({ title, children }: { title: string; children: React.Rea
     );
 };
 
-const SentimentSection = ({ data }: { data: SentimentAnalysis }) => (
-    <div className="space-y-2">
-        <p><strong>Overall Sentiment:</strong> {data.overall_sentiment.label} ({(data.overall_sentiment.score * 100).toFixed(1)}%)</p>
-        <p><strong>Confidence:</strong> {(data.overall_sentiment.confidence * 100).toFixed(1)}%</p>
-        <p><strong>Description:</strong> {data.description}</p>
-
-        <h4 className="font-semibold mt-4">Distribution:</h4>
-        <ul className="list-disc pl-5">
-        {Object.entries(data.sentiment_distribution).map(([type, val]) => (
-            <li key={type}>
-            {type.charAt(0).toUpperCase() + type.slice(1)} — {val.percentage}% ({val.sentences} sentences)
-            </li>
-        ))}
-        </ul>
-
-        <h4 className="font-semibold mt-4">Emotional Tone:</h4>
-        <ul className="grid grid-cols-2 gap-x-6 list-disc pl-5">
-        {Object.entries(data.emotional_tone).map(([emotion, val]) => (
-            <li key={emotion}>{emotion.charAt(0).toUpperCase() + emotion.slice(1)}: {(val * 100).toFixed(1)}%</li>
-        ))}
-        </ul>
-    </div>
-);
-
-const KeywordsSection = ({ data }: { data: KeywordExtraction }) => (
-    <div className="space-y-4">
-        <div>
-        <h4 className="font-semibold">Top Keywords:</h4>
-        <ul className="list-disc pl-5">
-            {data.keywords.map((kw, i) => (
-            <li key={i}>
-                {kw.word} (Score: {kw.score}, Frequency: {kw.frequency})
-            </li>
-            ))}
-        </ul>
-        </div>
-
-        <div>
-        <h4 className="font-semibold">Key Phrases:</h4>
-        <ul className="list-disc pl-5">
-            {data.key_phrases.map((phrase, i) => (
-            <li key={i}>
-                {phrase.phrase} (Frequency: {phrase.frequency})
-            </li>
-            ))}
-        </ul>
-        </div>
-
-        <div>
-        <h4 className="font-semibold">Named Entities:</h4>
-        <ul className="list-disc pl-5">
-            {data.named_entities.map((entity, i) => (
-            <li key={i}>
-                {entity.entity} — {entity.type} (Frequency: {entity.frequency})
-            </li>
-            ))}
-        </ul>
-        </div>
-    </div>
-);
 
 const TopicsSection = ({ data }: { data: TopicModeling }) => (
     <div className="space-y-4">

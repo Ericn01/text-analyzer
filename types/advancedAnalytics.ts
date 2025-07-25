@@ -4,7 +4,7 @@ export interface SentimentAnalysis {
     overall_sentiment: {
         score: number;
         label: 'Positive' | 'Negative' | 'Neutral';
-        percentage: number;
+        percentage?: number;
         confidence: number;
     };
     sentiment_distribution: {
@@ -19,6 +19,7 @@ export interface SentimentAnalysis {
         sadness: number;
         surprise: number;
         disgust: number;
+        neutral: number;
     };
     description: string;
 }

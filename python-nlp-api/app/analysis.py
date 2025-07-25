@@ -99,6 +99,8 @@ class NLPAnalyzer:
             readability_prediction = self.readability_predictor.predict_difficulty(text)
             document_summary = self.document_summarizer.summarize_document(text)
 
+            print (sentiment_analysis)
+
             results = {
                 "preprocessing_report": quality_report,
                 "sentiment_analysis": sentiment_analysis,

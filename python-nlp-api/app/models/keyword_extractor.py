@@ -1,4 +1,3 @@
-# keyword_extractor.py
 import re
 import math
 from collections import Counter, defaultdict
