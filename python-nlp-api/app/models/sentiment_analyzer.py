@@ -30,6 +30,7 @@ class SentimentAnalyzer:
             'surprise': {'surprised', 'amazed', 'shocked', 'astonished', 'stunned', 'bewildered', 'startled', 'astounded', 'flabbergasted', 'dumbfounded', 'taken aback', 'speechless'},
             'disgust': {'disgusted', 'revolted', 'repulsed', 'sick', 'nauseated', 'appalled', 'repugnant', 'loathe', 'abhor', 'detest', 'repelled', 'sickened', 'offended'}
         }
+        
         self.intensity_modifiers = {
             'very': 1.5, 'extremely': 2.0, 'really': 1.3, 'quite': 1.2, 'rather': 1.1,
             'somewhat': 0.8, 'slightly': 0.7, 'barely': 0.5, 'hardly': 0.4,

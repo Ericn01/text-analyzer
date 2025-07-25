@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         // Extract full document text for NLP analysis
         const fullText = parsedDocument.textData.fullText;
         
-        // Perform NLP analysis
+        // Perform NLP analysis --> Text pre-processing and application of models
         const nlpAnalysisData = await getNLPAnalysis({
             nlpAnalysisUrl: config.nlpServiceUrl,
             fullText
@@ -67,7 +67,8 @@ export async function POST(request: NextRequest) {
             reading_level: readingLevel,
             writing_style: writingStyle,
             key_topics: keyTopics,
-            complexity_level: complexityLevel
+            complexity_level: complexityLevel,
+            document_summary: nlpAnalysisData.document_summary.summary
         };
 
         // At this point the code could use some refactoring / splitting
@@ -102,6 +103,7 @@ export async function POST(request: NextRequest) {
                 topic_modeling: nlpAnalysisData.topic_modeling,
                 language_patterns: nlpAnalysisData.language_patterns,
                 readability_prediction: nlpAnalysisData.readability_prediction,
+                document_summary: nlpAnalysisData.document_summary,
                 text_stats: nlpAnalysisData.text_stats,
             },
             metadata: {

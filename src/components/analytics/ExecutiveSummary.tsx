@@ -16,6 +16,7 @@ type ExecutiveSummaryType = {
 }
 
 const ExecutiveSummary = ({ summary, document }: ExecutiveSummaryType) => {
+    const summaryText = summary.document_summary;
     const statCardLabels = ['total_words', 'reading_time_minutes', 'sentiment_score', 'reading_level'];
     
     const statCards = Object.entries(summary).filter(([label]) =>
@@ -23,13 +24,16 @@ const ExecutiveSummary = ({ summary, document }: ExecutiveSummaryType) => {
     );
 
     const insightCards = Object.entries(summary).filter(([label]) =>
-        !statCardLabels.includes(label)
+        !statCardLabels.includes(label) && label !== 'document_summary'
     );
 
     return (
         <div id="summary" className="mb-10">
             <SectionHeader sectionName="Executive Summary" />
             <DocOverview {...document} />
+
+             {/* Document Summary Section */}
+            {summaryText && <DocumentSummarySection documentSummary={summaryText} />}
 
             {/* Stat Cards */}
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-5 mb-8">
@@ -55,6 +59,25 @@ const ExecutiveSummary = ({ summary, document }: ExecutiveSummaryType) => {
         </div>
     )
 }
+
+// New Document Summary Component
+const DocumentSummarySection = ( {documentSummary} : {documentSummary: string}) => {
+    return (
+        <div className="bg-white border-2 border-[#e0e6ed] rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                    <div className="text-2xl">📋</div>
+                    <h3 className="text-xl font-bold text-gray-900">Document Summary</h3>
+                </div>
+            </div>
+            <div className="prose max-w-none">
+                <p className="text-gray-800 leading-relaxed text-base">
+                    {documentSummary}
+                </p>
+            </div>
+        </div>
+    );
+};
 
 const labelConversion = (label: string) => label.replaceAll("_", ' ')
     .split(" ")

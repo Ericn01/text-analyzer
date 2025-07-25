@@ -17,6 +17,7 @@ export interface AnalyticsSummary {
     writing_style: string;
     key_topics: string[];
     complexity_level: string;
+    document_summary?: string;
 }
 
 // Basic analytics interfaces

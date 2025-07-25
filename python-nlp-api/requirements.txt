@@ -5,3 +5,4 @@ textstat
 scikit-learn
 pydantic
 nltk
+sentencepiece

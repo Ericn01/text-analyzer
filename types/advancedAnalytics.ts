@@ -90,11 +90,23 @@ export interface QualityReport {
     chars_removed: number;
 }
 
+export interface DocumentSummary {
+    summary: string;
+    method: string;
+    confidence: number;
+    chunks_processed?: number;
+    original_word_count?: number;
+    summary_word_count?: number;
+    compression_ratio? : number;
+    error? : string
+}
+
 export interface AdvancedFeatures {
     sentiment_analysis: SentimentAnalysis;
     keyword_extraction: KeywordExtraction;
     topic_modeling: TopicModeling;
     language_patterns: LanguagePatterns;
     readability_prediction: NLPReadingLevel;
+    document_summary: DocumentSummary;
     text_stats?: ProcessedTextStats;
 }

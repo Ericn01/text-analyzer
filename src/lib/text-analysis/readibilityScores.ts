@@ -18,7 +18,7 @@ const calculateReadability = (text: string) : ReadabilityMetrics => {
         flesch_kincaid_grade: {
             score: Math.round(fk * 10) / 10,
             description: getGradeDescription(fk),
-            percentage: getPercentage(14, 0, fk)
+            percentage: getPercentage(18, 0, fk) // Could theoretically go beyond 16
         },
         smog_index: {
             score: Math.round(smog * 10) / 10,

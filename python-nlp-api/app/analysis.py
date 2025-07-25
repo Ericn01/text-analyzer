@@ -8,13 +8,15 @@ from models.keyword_extractor import KeywordExtractor
 from models.topic_modeler import TopicModeler
 from models.language_analyzer import LanguageAnalyzer
 from models.process_text import TextPreprocessor, TextQualityReport, PreprocessingConfig
+from models.document_summarizer import DocumentSummarizerMain, DocumentSummarizerAlt
 
 import warnings
 warnings.filterwarnings('ignore') # Suppress warnings, especially from transformers
 
 class NLPAnalyzer:
-    def __init__(self):
+    def __init__(self, summarizer_model='alt'):
         """Initialize with multiple lightweight models"""
+        self.summarizer_model = summarizer_model
         try:
             self.nlp = spacy.load("en_core_web_md")
         except OSError:
@@ -31,6 +33,8 @@ class NLPAnalyzer:
         self.keyword_extractor = KeywordExtractor()
         self.topic_modeler = TopicModeler(self.nlp) # Pass spaCy model for topic modeling
         self.readability_predictor = ReadabilityPredictor()
+        # The main summarizer is massively computationally expensive and makes my desktop crash so no thanks for now!
+        self.document_summarizer = DocumentSummarizerAlt() if summarizer_model == 'alt' else DocumentSummarizerMain()
 
         # Pass emotion words to language analyzer (as it needs it for objectivity score)
         self.language_analyzer = LanguageAnalyzer(self.sentiment_analyzer.emotion_words) 
@@ -93,6 +97,7 @@ class NLPAnalyzer:
             topic_modeling = self.topic_modeler.model_topics(text, sentences, doc)
             language_patterns = self.language_analyzer.analyze_language_patterns(text, sentences, doc)
             readability_prediction = self.readability_predictor.predict_difficulty(text)
+            document_summary = self.document_summarizer.summarize_document(text)
 
             results = {
                 "preprocessing_report": quality_report,
@@ -101,6 +106,7 @@ class NLPAnalyzer:
                 "topic_modeling": topic_modeling,
                 "language_patterns": language_patterns,
                 "readability_prediction": readability_prediction,
+                "document_summary": document_summary,
                 "text_stats": {
                     "original_length": quality_report.original_length if quality_report else len(text),
                     "processed_length": len(text),
