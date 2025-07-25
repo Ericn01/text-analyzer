@@ -24,21 +24,20 @@ export const SectionHeader = ({ sectionName }: SectionHeaderProps): ReactElement
 }
 
 const ReportGenerationDate = ({ timestamp }: { timestamp: string }) => (
-  <div className="relative w-full">
-        <div
-            title="Timestamp of report generation"
-            className="absolute top-0 right-3 text-sm font-semibold px-3 py-1 border border-black/20 rounded-full
-            bg-gradient-to-r from-green-400 to-emerald-500
-            text-white shadow-md shadow-emerald-500/20 transition-all duration-300
-            hover:shadow-lg hover:scale-105 hover:cursor-default"
-        >
-        {`Generated: ${new Intl.DateTimeFormat('en-US', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        }).format(new Date(timestamp))}`}
-        </div>
-  </div>
+    <div className="relative w-full">
+            <div
+                title="Timestamp of report generation"
+                className="absolute top-0 right-3 text-sm font-medium px-2.5 py-0.5 border border-gray-300 rounded-full
+                bg-gray-100 text-gray-700 transition-all duration-200
+                hover:bg-gray-200 hover:text-gray-800 hover:cursor-default"
+            >
+            {`Generated: ${new Intl.DateTimeFormat('en-US', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+            }).format(new Date(timestamp))}`}
+            </div>
+    </div>
 );
 
 const LoadingSpinner = () => (

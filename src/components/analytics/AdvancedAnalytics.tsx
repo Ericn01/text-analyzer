@@ -9,7 +9,7 @@ import {
     ProcessedTextStats
 } from "../../../types/advancedAnalytics";
 import { SectionHeader } from "./Results";
-import TextStats from "./TextStats";
+import TextStats from "./nlpComponents/TextStats";
 import SentimentSection from "./nlpComponents/SentimentAnalysis";
 import KeywordsSection from "./nlpComponents/KeywordsSection";
 

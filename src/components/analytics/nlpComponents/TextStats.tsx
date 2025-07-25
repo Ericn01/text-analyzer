@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, FileText, AlertCircle, CheckCircle, Info } from 'lucide-react';
-import { ProcessedTextStats } from '../../../types/advancedAnalytics';
+import { ProcessedTextStats } from '../../../../types/advancedAnalytics';
 
 const TextStats = ({ stats }: { stats: ProcessedTextStats }) => {
     const [showQualityPanel, setShowQualityPanel] = useState(true);
@@ -30,6 +30,24 @@ const TextStats = ({ stats }: { stats: ProcessedTextStats }) => {
             return <FileText className="w-4 h-4" />;
         }
     };
+
+    const getQualityValue = (quality: string) => {
+        switch(quality) {
+            case 'excellent':
+                return 100;
+            case 'good':
+                return 80;
+            case 'fair':
+                return 60;
+            case 'poor':
+                return 40;
+            case 'unusable':
+                return 20;
+            default:
+                return 0;
+        }
+    }
+    
 
     const formatNumber = (num: number) => {
         return num.toLocaleString();
@@ -92,7 +110,7 @@ const TextStats = ({ stats }: { stats: ProcessedTextStats }) => {
                     <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-900 font-medium">
-                            {stats.quality_score}/100
+                            {getQualityValue(stats.quality_score)}/100
                         </span>
                         {stats.processing_report && (
                             <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${getQualityColor(stats.processing_report.quality_score)}`}>
@@ -115,7 +133,7 @@ const TextStats = ({ stats }: { stats: ProcessedTextStats }) => {
                     className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
                 >
                     {showQualityPanel ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                    {showQualityPanel ? 'Hide' : 'Show'} Quality processing_report Details
+                    {showQualityPanel ? 'Hide' : 'Show'} Quality Processing Report Details
                 </button>
                 </div>
             )}
@@ -127,7 +145,7 @@ const TextStats = ({ stats }: { stats: ProcessedTextStats }) => {
                 <div className="space-y-4">
                 {/* Quality Overview */}
                 <div>
-                    <h3 className="text-md font-semibold text-gray-900 mb-2">Quality processing_report</h3>
+                    <h3 className="text-md font-semibold text-gray-900 mb-2">Quality Processing Report</h3>
                     <div className={`p-3 rounded-lg border ${getQualityColor(stats.processing_report.quality_score)}`}>
                     <div className="flex items-center gap-2 mb-1">
                         {getQualityIcon(stats.processing_report.quality_score)}
