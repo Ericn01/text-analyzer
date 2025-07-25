@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from analysis import EnhancedNLPAnalyzer
+from analysis import NLPAnalyzer
 from pydantic import BaseModel
 import uvicorn
 
@@ -10,10 +10,10 @@ app = FastAPI()
 
 @app.post("/analyze")
 def analyze_text(req: TextRequest):
-    if len(req.text) < 50:
-        raise HTTPException(status_code=400, detail="File too short for NLP analysis (minimum 50 words).")
+    if len(req.text) < 100:
+        raise HTTPException(status_code=400, detail="File too short for NLP analysis (minimum 100 words).")
     
-    nlp = EnhancedNLPAnalyzer()
+    nlp = NLPAnalyzer()
     results = nlp.analyze_text(req.text)
     return results
 

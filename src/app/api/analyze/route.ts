@@ -9,7 +9,7 @@ import { createTempFile,
         safeCleanup, 
         config } 
 from '@/lib/file-processing/processFileContent';
-import { DocumentInfo } from '../../../../types/basicAnalytics';
+import { AnalyticsSummary, DocumentInfo } from '../../../../types/basicAnalytics';
 
 export async function POST(request: NextRequest) {
     // set temporary file path as null for now
@@ -49,18 +49,18 @@ export async function POST(request: NextRequest) {
             fullText
         });  
 
-         // Calculate summary fields from existing data
+        // Calculate summary fields from existing data
         const totalWords = basic_analytics.overview.total_words;
-        const readingTimeMinutes = Math.ceil(totalWords / 200); // Average reading speed
+        const readingTimeMinutes = parseInt((totalWords / 200).toFixed(2)); // Average reading speed
         const sentimentScore = nlpAnalysisData.sentiment_analysis.overall_sentiment.score;
-        const readingLevel = basic_analytics.readability.flesch_kincaid_grade.score;
+        const readingLevel = basic_analytics.readability.flesch_reading_ease.score;
         const writingStyle = getWritingStyle(nlpAnalysisData.language_patterns.stylistic_features.formal_language_score, readingLevel)
         const keyTopics = nlpAnalysisData.topic_modeling.primary_topics
             .slice(0, 5)
             .map(topic => topic.name.replace(/^Topic \d+: /, ''));
-        const complexityLevel = basic_analytics.readability.flesch_reading_ease.description;
+        const complexityLevel = basic_analytics.readability.flesch_kincaid_grade.description;
 
-        const summaryData =  {
+        const summaryData : AnalyticsSummary =  {
             total_words: totalWords,
             reading_time_minutes: readingTimeMinutes,
             sentiment_score: sentimentScore,
@@ -69,6 +69,17 @@ export async function POST(request: NextRequest) {
             key_topics: keyTopics,
             complexity_level: complexityLevel
         };
+
+        // At this point the code could use some refactoring / splitting
+        if (nlpAnalysisData.readability_prediction){
+            const formattedNLPReadability = {
+                score: nlpAnalysisData.readability_prediction.difficulty_score,
+                description: nlpAnalysisData.readability_prediction.description,
+                percentage: Math.min(nlpAnalysisData.readability_prediction.difficulty_score, 100)
+            }
+            // Append to the readability data in basic analytics
+            basic_analytics.readability['nlp_readability_score'] = formattedNLPReadability;
+        }
 
         // Remove temporary files
         await safeCleanup(tempFilePath);
@@ -89,7 +100,9 @@ export async function POST(request: NextRequest) {
                 sentiment_analysis: nlpAnalysisData.sentiment_analysis,
                 keyword_extraction: nlpAnalysisData.keyword_extraction,
                 topic_modeling: nlpAnalysisData.topic_modeling,
-                language_patterns: nlpAnalysisData.language_patterns
+                language_patterns: nlpAnalysisData.language_patterns,
+                readability_prediction: nlpAnalysisData.readability_prediction,
+                text_stats: nlpAnalysisData.text_stats,
             },
             metadata: {
                 analysis_id: analysisId,

@@ -15,15 +15,16 @@ export const processFileContent = async (filePath: string, fileType: string) => 
                 const htmlContent = await convertDocxToHTML(buffer);
                 return parseHTMLDocument(htmlContent.value);
 
-            case 'text/html':
             case 'text/plain':
-                const content = await fs.readFile(filePath, 'utf8');
-                return parseHTMLDocument(content);
+                return await fs.readFile(filePath, 'utf8');
+            case 'text/html':
+                const htmlDoc = await fs.readFile(filePath, 'utf8');
+                return parseHTMLDocument(htmlDoc);
 
             case 'application/pdf':
                 throw new FileProcessingError('PDF analysis not implemented yet', fileType);
 
-            default:
+            default: // Frontend validation makes it so that this likely will never be reached.
                 throw new FileProcessingError(`Unsupported file type: ${fileType}`, fileType);
         }
     } catch (error) {

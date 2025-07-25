@@ -46,11 +46,13 @@ export interface ReadabilityMetric {
     percentage: number;
 }
 
-
 export interface ReadabilityMetrics {
     flesch_reading_ease: ReadabilityMetric;
     flesch_kincaid_grade: ReadabilityMetric;
     smog_index: ReadabilityMetric;
+    automated_readability_index: ReadabilityMetric;
+    dale_chall_formula: ReadabilityMetric;
+    nlp_readability_score?: ReadabilityMetric
 }
 
 export interface BasicAnalytics {

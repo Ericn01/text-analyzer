@@ -64,9 +64,37 @@ export interface LanguagePatterns {
     };
 }
 
+export interface NLPReadingLevel {
+    difficulty_score: number;
+    description: string;
+    method: string;
+}
+
+export interface ProcessedTextStats {
+    original_length: number;
+    processed_length: number;
+    sentences_count: number;
+    words_count: number;
+    quality_score: number;
+    processing_report?: QualityReport;
+}
+
+export interface QualityReport {
+    original_length:  number;
+    processed_length: number;
+    quality_score: "excellent" | "good" | "fair" | "poor" | "unasable";
+    issues_found?: string[];
+    corrections_applied: string[];
+    sentences_count: number;
+    words_count: number;
+    chars_removed: number;
+}
+
 export interface AdvancedFeatures {
     sentiment_analysis: SentimentAnalysis;
     keyword_extraction: KeywordExtraction;
     topic_modeling: TopicModeling;
     language_patterns: LanguagePatterns;
+    readability_prediction: NLPReadingLevel;
+    text_stats?: ProcessedTextStats;
 }

@@ -1,11 +1,14 @@
-import re from 'text-readability';
+import rs from 'text-readability';
 import { ReadabilityMetrics } from "../../../types/basicAnalytics";
 
 const calculateReadability = (text: string) : ReadabilityMetrics => {
-    const fre = re.fleschReadingEase(text);
-    const fk = re.fleschKincaidGrade(text);
-    const smog = re.smogIndex(text);
-
+    const fre = rs.fleschReadingEase(text);
+    const fk = rs.fleschKincaidGrade(text);
+    const smog = rs.smogIndex(text);
+    const automatedReadability = rs.automatedReadabilityIndex(text);
+    const daleChall = rs.daleChallReadabilityScore(text); // Based off unfamiliar words
+    
+    // Lower percentage means more difficult in these scores
     return {
         flesch_reading_ease: {
             score: Math.round(fre * 10) / 10,
@@ -15,15 +18,28 @@ const calculateReadability = (text: string) : ReadabilityMetrics => {
         flesch_kincaid_grade: {
             score: Math.round(fk * 10) / 10,
             description: getGradeDescription(fk),
-            percentage: Math.round((fk / 12) * 100)
+            percentage: getPercentage(14, 0, fk)
         },
         smog_index: {
             score: Math.round(smog * 10) / 10,
             description: getGradeDescription(smog),
-            percentage: Math.round((smog / 12) * 100)
+            percentage: getPercentage(18, 3, smog)
+        }, 
+        automated_readability_index: {
+            score: Math.round(automatedReadability * 10) / 10,
+            description: getAutomatedReadabilityDescription(automatedReadability),
+            percentage: getPercentage(18, 1, automatedReadability)
+        }, 
+        dale_chall_formula: {
+            score: Math.round(daleChall * 10) / 10,
+            description: getDaleChallReadabilityDescription(daleChall),
+            percentage: getPercentage(10, 4.9, daleChall)
         }
     };
 };
+
+const getPercentage = (maxScore : number, minScore: number, actualScore: number) => 
+    Math.max(0, Math.min(100, (maxScore - actualScore) / (maxScore - minScore) * 100));
 
 /**
  * Gets description for Flesch Reading Ease score
@@ -53,6 +69,83 @@ function getGradeDescription(grade: number): string {
     if (roundedGrade === 12) return "12th grade level";
     if (roundedGrade <= 16) return "College level";
     return "Graduate level";
+}
+
+function getDaleChallReadabilityDescription(score: number): string {
+    if (score <= 4.9) {
+        return "Easily understood by an average 4th grader";
+    } else if (score <= 5.9) {
+        return "Fifth to sixth grade reading level";
+    } else if (score <= 6.9) {
+        return "Seventh to eighth grade reading level";
+    } else if (score <= 7.9) {
+        return "Ninth to tenth grade reading level";
+    } else if (score <= 8.9) {
+        return "Eleventh to twelfth grade reading level";
+    } else if (score <= 9.9) {
+        return "College student reading level";
+    } else {
+        return "College graduate reading level";
+    }
+}
+
+
+/**
+ * Gets description for grade level scores
+ */
+function getAutomatedReadabilityDescription(grade: number): string {
+    const roundedGrade = Math.round(grade);
+    const suffix = "reading level";
+    let description = "";
+
+    switch (roundedGrade) {
+        case 1:
+            description = "Kindergarten ";
+            break;
+        case 2:
+            description = "First grade ";
+            break;
+        case 3:
+            description = "Second grade ";
+            break;
+        case 4:
+            description = "Third grade ";
+            break;
+        case 5:
+            description = "Fourth grade ";
+            break;
+        case 6:
+            description = "Fifth grade ";
+            break;
+        case 7:
+            description = "Sixth grade ";
+            break;
+        case 8:
+            description = "Seventh grade ";
+            break;
+        case 9:
+            description = "Eighth grade ";
+            break;
+        case 10:
+            description = "Ninth grade ";
+            break;
+        case 11:
+            description = "Tenth grade ";
+            break;
+        case 12:
+            description = "Eleventh grade ";
+            break;
+        case 13:
+            description = "Twelfth grade ";
+            break;
+        case 14:
+            description = "College student ";
+            break;
+        default:
+            return "Invalid score";
+    }
+
+    return description + suffix;
 }
 
 

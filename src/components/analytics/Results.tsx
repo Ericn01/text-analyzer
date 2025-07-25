@@ -93,8 +93,14 @@ const ResultsBody = ({
 }: TextAnalyticsResponse) => {
     const { overview, structure, readability } = basic_analytics;
     const { word_frequency, word_length_distribution, sentence_length_trends, parts_of_speech } = visual_analytics;
-    const { sentiment_analysis, keyword_extraction, topic_modeling, language_patterns } = advanced_features;
-    console.log(document)
+    const { sentiment_analysis, 
+            keyword_extraction, 
+            topic_modeling, 
+            language_patterns,
+            readability_prediction,
+            text_stats,
+        } = advanced_features;
+
     return (
         <article className="max-w-[1200px] mx-auto p-5">
         <div className="md:grid grid-cols-[250px_1fr] gap-6 my-auto">
@@ -128,6 +134,8 @@ const ResultsBody = ({
                 keywords={keyword_extraction}
                 topics={topic_modeling}
                 language={language_patterns}
+                readability={readability_prediction}
+                textStats={text_stats}
             />
             </div>
         </div>

@@ -1,21 +1,13 @@
-import { SentimentAnalysis, KeywordExtraction, TopicModeling, LanguagePatterns } from '../../../../types/advancedAnalytics';
 import { NLPServiceError } from '@/lib/file-processing/errorProcessing';
 import { config } from './processFileContent';
+import { AdvancedFeatures } from '../../../types/advancedAnalytics';
 
 type NLPReqestProps = {
     nlpAnalysisUrl: string,
     fullText: string
 }
 
-// Move to types folder later
-interface NLPResponse {
-    sentiment_analysis: SentimentAnalysis,
-    keyword_extraction: KeywordExtraction,
-    topic_modeling: TopicModeling,
-    language_patterns: LanguagePatterns
-}
-
-export const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps) : Promise<NLPResponse> => {
+export const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps) : Promise<AdvancedFeatures> => {
     const controller = new AbortController();
     const timeoutId = setTimeout( () => controller.abort, config.requestTimeout); 
 
@@ -64,14 +56,15 @@ export const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps)
 }
 
 // Adding this to ensure the response structure remains consistent in the future.
-const isValidNLPResponse = (response: any): response is NLPResponse => {
+const isValidNLPResponse = (response: any): response is AdvancedFeatures => {
     return (
         response &&
         typeof response === 'object' &&
         'sentiment_analysis' in response &&
         'keyword_extraction' in response &&
         'topic_modeling' in response &&
-        'language_patterns' in response
+        'language_patterns' in response &&
+        'readability_prediction' in response
     );
 };
 

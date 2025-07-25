@@ -5,14 +5,19 @@ import {
     KeywordExtraction,
     TopicModeling,
     LanguagePatterns,
+    NLPReadingLevel,
+    ProcessedTextStats
 } from "../../../types/advancedAnalytics";
 import { SectionHeader } from "./Results";
+import TextStats from "./TextStats";
 
 type AdvancedFeaturesProps = {
     sentiment: SentimentAnalysis;
     keywords: KeywordExtraction;
     topics: TopicModeling;
     language: LanguagePatterns;
+    readability: NLPReadingLevel;
+    textStats: ProcessedTextStats | undefined;
 };
 
 const AccordionItem = ({ title, children }: { title: string; children: React.ReactNode }) => {
@@ -145,11 +150,29 @@ const LanguagePatternsSection = ({ data }: { data: LanguagePatterns }) => (
     </div>
 );
 
+const ReadabilitySection = ({data} : {data : NLPReadingLevel}) => {
+    const {difficulty_score, description, method} = data;
+    return (
+        <div className="space-y-4">
+            <div>
+            <h4 className="font-semibold">Readability Data:</h4>
+            <ul className="list-disc pl-5">
+                <li>NLP Reading Difficulty Score: {difficulty_score}</li>
+                <li>Description: {description}</li>
+                <li> {method} </li>
+            </ul>
+            </div>
+        </div>
+    );
+}
+
 const ModelFeatures = ({
     sentiment,
     keywords,
     topics,
     language,
+    readability,
+    textStats
 }: AdvancedFeaturesProps) => {
     return (
         <article id="advanced" className="max-w-4xl mx-auto mt-10 px-4">
@@ -170,7 +193,15 @@ const ModelFeatures = ({
             <AccordionItem title="Language Patterns">
                 <LanguagePatternsSection data={language} />
             </AccordionItem>
-            </article>
+
+            <AccordionItem title="Text Readability Analysis">
+                <ReadabilitySection data={readability} />
+            </AccordionItem>
+
+            {textStats && (
+                <TextStats stats={textStats} />
+            )}
+        </article>
     );
 };
 

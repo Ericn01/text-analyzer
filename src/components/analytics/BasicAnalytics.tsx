@@ -6,6 +6,7 @@ import { WordFrequencyData, WordLengthDistribution } from "../../../types/visual
 import { WordFrequencyChart } from "../charts/WordFrequencyChart";
 import { formatMetricName } from "@/lib/utils/formatMetric";
 import { StructureChart } from "../charts/StructureChart";
+import ReadabilityChart from "../charts/ReadabilityChart";
 
 // Props interface for the component
 type BasicAnalyticsProps = {
@@ -167,20 +168,53 @@ const StructureTab = ({ structureData }: { structureData: StructureMetrics }) =>
 };
 
 const ReadabilityTab = ({ readabilityData }: { readabilityData: ReadabilityMetrics }) => {
+    const [viewMode, setViewMode] = useState<'cards' | 'chart'>('cards');
     return (
         <div className="space-y-6">
+            <div className="flex justify-between items-center">
             <h3 className="text-xl font-bold text-gray-800">Readability Metrics</h3>
+            
+            {/* Toggle Switch */}
+            <div className="flex items-center space-x-3">
+            <span className={`text-sm ${viewMode === 'cards' ? 'font-semibold text-gray-800' : 'text-gray-500'}`}>
+                Cards
+            </span>
+            <button
+                onClick={() => setViewMode(viewMode === 'cards' ? 'chart' : 'cards')}
+                className={`
+                relative inline-flex h-6 w-11 items-center rounded-full transition-colors
+                ${viewMode === 'chart' ? 'bg-blue-600' : 'bg-gray-200'}
+                `}
+            >
+                <span
+                className={`
+                    inline-block h-4 w-4 transform rounded-full bg-white transition-transform
+                    ${viewMode === 'chart' ? 'translate-x-6' : 'translate-x-1'}
+                `}
+                />
+            </button>
+            <span className={`text-sm ${viewMode === 'chart' ? 'font-semibold text-gray-800' : 'text-gray-500'}`}>
+                Chart
+            </span>
+            </div>
+        </div>
+    
+        {/* Content based off the viewing mode */}
+        {viewMode === 'cards' ? ( 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {Object.entries(readabilityData).map(([metricName, metricData]) => (
                     <ReadabilityCard
-                        key={metricName}
-                        metricName={metricName}
-                        readabilityData={metricData}
+                    key={metricName}
+                    metricName={metricName}
+                    readabilityData={metricData}
                     />
                 ))}
             </div>
+        ) : (
+            <ReadabilityChart readabilityData={readabilityData} />
+        )}
         </div>
-    );
+    )
 };
 
 const ReadabilityCard = ({
