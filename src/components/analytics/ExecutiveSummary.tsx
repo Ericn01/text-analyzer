@@ -7,7 +7,7 @@ const convertUploadDate = (uploadDate: string): string => {
     const uploadDateObj = new Date(uploadDate); // Convert string to Date
     const daysAgo = Math.floor((today.getTime() - uploadDateObj.getTime()) / (1000 * 60 * 60 * 24));
 
-    return daysAgo === 0 ? " (Today)" : daysAgo === 1 ? " (Yesterday)" : ` (${daysAgo} days ago)`;
+    return daysAgo === 0 ? " Today" : daysAgo === 1 ? " Yesterday" : ` (${daysAgo} days ago)`;
 }
 
 type ExecutiveSummaryType = {
@@ -35,7 +35,7 @@ const ExecutiveSummary = ({ summary, document }: ExecutiveSummaryType) => {
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-5 mb-8">
                 {statCards.map(([label, value], index) => (
                     <StatCard
-                        key={`stat-${label}-${index}`} // Use deterministic key
+                        key={`stat-${label}-${index}`} 
                         value={value as number}
                         label={labelConversion(label)}
                     />
@@ -46,7 +46,7 @@ const ExecutiveSummary = ({ summary, document }: ExecutiveSummaryType) => {
             <div className="grid grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-5">
                 {insightCards.map(([label, value], index) => (
                     <InsightCard
-                        key={`insight-${label}-${index}`} // Use deterministic key
+                        key={`insight-${label}-${index}`}
                         value={value as string | string[]}
                         label={labelConversion(label)}
                     />

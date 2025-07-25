@@ -25,7 +25,7 @@ export interface TextAnalyticsResponse {
     basic_analytics: BasicAnalytics;
     visual_analytics: VisualAnalytics;
     advanced_features: AdvancedFeatures;
-    metadata: AnalyticsMetadata;
-    errors: string[];
-    warnings: string[];
+    metadata?: AnalyticsMetadata;
+    errors?: string[];
+    warnings?: string[];
 }

@@ -9,6 +9,7 @@ import ResultsHeader from './ResultsHeader';
 import BasicAnalytics from './BasicAnalytics';
 import ChartsGrid from './VisualAnalytics';
 import ModelFeatures from '@/components/analytics/AdvancedAnalytics';
+import Link from 'next/link';
 
 type SectionHeaderProps = {
     sectionName: string
@@ -93,7 +94,7 @@ const ResultsBody = ({
     const { overview, structure, readability } = basic_analytics;
     const { word_frequency, word_length_distribution, sentence_length_trends, parts_of_speech } = visual_analytics;
     const { sentiment_analysis, keyword_extraction, topic_modeling, language_patterns } = advanced_features;
-
+    console.log(document)
     return (
         <article className="max-w-[1200px] mx-auto p-5">
         <div className="md:grid grid-cols-[250px_1fr] gap-6 my-auto">
@@ -146,28 +147,28 @@ const useAnalysisData = () => {
         setError(null);
         
         try {
-        const storedData = sessionStorage.getItem('analysisResult');
-        
-        if (!storedData) {
-            setData(null);
-            setLoading(false);
-            return;
-        }
+            const storedData = sessionStorage.getItem('analysisResult');
+            
+            if (!storedData) {
+                setData(null);
+                setLoading(false);
+                return;
+            }
 
-        const parsedData: TextAnalyticsResponse = JSON.parse(storedData);
-        
-        // Validate that the data has the required structure
-        if (!parsedData.success || !parsedData.document || !parsedData.summary) {
-            throw new Error('Invalid analysis data structure');
-        }
-        
-        setData(parsedData);
-        } catch (err) {
-        console.error('Error loading analysis data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load analysis data');
-        setData(null);
-        } finally {
-        setLoading(false);
+            const parsedData: TextAnalyticsResponse = JSON.parse(storedData);
+            
+            // Validate that the data has the required structure
+            if (!parsedData.success || !parsedData.document || !parsedData.summary) {
+                throw new Error('Invalid analysis data structure');
+            }
+            
+            setData(parsedData);
+            } catch (err) {
+            console.error('Error loading analysis data:', err);
+            setError(err instanceof Error ? err.message : 'Failed to load analysis data');
+            setData(null);
+            } finally {
+            setLoading(false);
         }
     };
 
@@ -175,9 +176,7 @@ const useAnalysisData = () => {
         loadData();
     }, []);
 
-    const redirectToUpload = () => {
-        router.push('/upload'); // Adjust path as needed
-    };
+    const redirectToUpload = () => <Link href="/" />
 
     const retry = () => {
         loadData();
@@ -191,15 +190,15 @@ export default function Results() {
 
     const renderContent = () => {
         if (loading) {
-        return <LoadingSpinner />;
+            return <LoadingSpinner />;
         }
 
         if (error) {
-        return <ErrorMessage message={error} onRetry={retry} />;
+            return <ErrorMessage message={error} onRetry={retry} />;
         }
 
         if (!data) {
-        return <NoDataMessage onRedirect={redirectToUpload} />;
+            return <NoDataMessage onRedirect={redirectToUpload} />;
         }
 
         return <ResultsBody {...data} />;

@@ -22,10 +22,10 @@ const analyzeText = async ({structure, textData} : AnalyzeTextProps) => {
     const readability = calculateReadability(fullText);
 
     // Chart data extraction 
-    const wordFrequency = analyzeWordFrequency(fullText);
-    const wordLengthDistribution = getWordLengthDistribution(fullText)
-    const sentenceLengthTrends = getSentenceLengthTrends(paragraphSentences);
-    const partsOfSpeech = getPartsOfSpeechBreakdown(fullText);
+    const word_frequency = analyzeWordFrequency(fullText);
+    const word_length_distribution = getWordLengthDistribution(fullText)
+    const sentence_length_trends = getSentenceLengthTrends(paragraphSentences);
+    const parts_of_speech = getPartsOfSpeechBreakdown(fullText);
 
     return {
         "basic_analytics": {
@@ -34,10 +34,10 @@ const analyzeText = async ({structure, textData} : AnalyzeTextProps) => {
             readability
         },
         "visual_analytics": {
-            wordFrequency,
-            wordLengthDistribution,
-            sentenceLengthTrends,
-            partsOfSpeech
+            word_frequency,
+            word_length_distribution,
+            sentence_length_trends,
+            parts_of_speech
         }
     }
 }

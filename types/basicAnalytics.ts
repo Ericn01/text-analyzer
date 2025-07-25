@@ -2,7 +2,7 @@
 export interface DocumentInfo {
     filename: string;
     original_name: string;
-    type: 'pdf' | 'txt' | 'docx';
+    type: string;
     size_bytes: number;
     uploaded_at: string;
     category: string;

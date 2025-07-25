@@ -35,11 +35,10 @@ export const analyzeWordFrequency = (text : string) : WordFrequencyData => {
         value: count
     }));
 
-    return {
-            top_words,
-            chart_data
+    return { 
+            top_words: top_words as WordFrequencyData['top_words'], 
+            chart_data: chart_data as WordFrequencyData['chart_data'] 
         }
-
 }
 
 export const getWordLengthDistribution = (text: string) : WordLengthDistribution => {
@@ -80,9 +79,9 @@ export const getWordLengthDistribution = (text: string) : WordLengthDistribution
         }
     ));
 
-    return {
-        buckets,
-        chart_data
+    return { 
+        buckets: buckets as WordLengthDistribution['buckets'], 
+        chart_data: chart_data as WordLengthDistribution['chart_data'] 
     }
 }
 
@@ -106,7 +105,11 @@ export const getSentenceLengthTrends = (paragraphs: string[][]): SentenceLengthT
         (data_points.reduce((sum, d) => sum + d.length, 0) / data_points.length).toFixed(1)
     );
 
-    return { data_points, chart_data, average_length };
+    return { 
+            data_points: data_points as SentenceLengthTrends['data_points'], 
+            chart_data: chart_data as SentenceLengthTrends['chart_data'], 
+            average_length: average_length as SentenceLengthTrends['average_length'] 
+        };
 }
 
 export const getPartsOfSpeechBreakdown = (text: string): PartsOfSpeech => {
@@ -160,6 +163,6 @@ export const getPartsOfSpeechBreakdown = (text: string): PartsOfSpeech => {
 
     return {
         breakdown: breakdown as PartsOfSpeech['breakdown'],
-        chart_data
+        chart_data: chart_data as PartsOfSpeech['chart_data']
     };
 }

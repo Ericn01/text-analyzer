@@ -5,7 +5,6 @@ import { Bar } from "react-chartjs-2";
 
 /* Top 20 words: Bar Chart */
 export const WordFrequencyChart = ({ wordFrequencyData }: { wordFrequencyData: WordFrequencyData }) => {
-    console.log(wordFrequencyData)
     const options = createBarOptions(
         '',
         'Words',

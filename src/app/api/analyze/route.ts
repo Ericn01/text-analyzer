@@ -9,6 +9,7 @@ import { createTempFile,
         safeCleanup, 
         config } 
 from '@/lib/file-processing/processFileContent';
+import { DocumentInfo } from '../../../../types/basicAnalytics';
 
 export async function POST(request: NextRequest) {
     // set temporary file path as null for now
@@ -95,8 +96,8 @@ export async function POST(request: NextRequest) {
                 file_info: {
                     filename: file.name,
                     file_size: file.size,
-                    original_name: documentInfo.originalName,
-                    upload_time: documentInfo.uploadedAt
+                    original_name: documentInfo.original_name,
+                    upload_time: documentInfo.uploaded_at
                 }
             }
         });
@@ -115,13 +116,13 @@ export async function POST(request: NextRequest) {
 
 
 // Metadata extraction
-const getDocumentInfo = (file: File) => {
+const getDocumentInfo = (file: File) : DocumentInfo => {
     return {
         filename: file.name,
-        originalName: file.name,
+        original_name: file.name,
+        size_bytes: file.size,
+        uploaded_at: new Date().toISOString(),
         type: file.type,
-        sizeBytes: file.size,
-        uploadedAt: new Date().toISOString(),
         category: getFileCategory(file.type),
     };
 }
