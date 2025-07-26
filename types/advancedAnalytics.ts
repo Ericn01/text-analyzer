@@ -6,6 +6,7 @@ export interface SentimentAnalysis {
         label: 'Positive' | 'Negative' | 'Neutral';
         percentage?: number;
         confidence: number;
+        factual_content_score?: number;
     };
     sentiment_distribution: {
         positive: { percentage: number; sentences: number };

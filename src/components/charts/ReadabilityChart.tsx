@@ -88,15 +88,15 @@ const ReadabilityChart = ({ readabilityData }: { readabilityData: ReadabilityMet
                 <div className="flex flex-wrap gap-4 text-sm">
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-red-500 rounded"></div>
-                    <span>High Difficulty (0-59%)</span>
+                    <span>High Difficulty (0-44%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-                    <span>Medium Difficulty (60-79%)</span>
+                    <span>Medium Difficulty (45-69%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-green-500 rounded"></div>
-                    <span>Low Difficulty (80-100%)</span>
+                    <span>Low Difficulty (70-100%)</span>
                 </div>
                 </div>
             </div>

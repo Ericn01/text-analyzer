@@ -190,15 +190,14 @@ class DocumentSummarizerMain:
             }
 
 
-# adding a second, simpler document summarizer model with facebook's bart-large-cnn model
-# document_summarizer_alt.py
+# adding a second, simpler document summarizer model
 from transformers import pipeline
 from typing import Dict, Any
 
 
 class DocumentSummarizerAlt:
     def __init__(self):
-        self.summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+        self.summarizer = pipeline("summarization", model="facebook/bart-large-xsum")
     
     def summarize_document(self, text: str) -> Dict[str, Any]:
         """Generate document summary with metadata."""
@@ -226,10 +225,13 @@ class DocumentSummarizerAlt:
         
         try:
             result = self.summarizer(text,
-                                    max_length=300,
-                                    min_length=50,
-                                    do_sample=False,
-                                    truncation=True)  # Add truncation for safety
+                                    max_length=200,
+                                    min_length=70,
+                                    do_sample=True,
+                                    truncation=True,
+                                    early_stopping=False,
+                                    length_penalty=0.8,
+                                    repetition_penalty=1.1) 
             
             original_word_count = len(text.split())
             summary_word_count = len(result[0]['summary_text'].split())
