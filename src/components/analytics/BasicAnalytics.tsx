@@ -225,14 +225,14 @@ const ReadabilityCard = ({
     readabilityData: ReadabilityMetric;
 }) => {
     const getScoreColor = (percentage: number) => {
-        if (percentage >= 80) return 'text-green-600';
-        if (percentage >= 60) return 'text-yellow-600';
+        if (percentage >= 70) return 'text-green-600';
+        if (percentage >= 45) return 'text-yellow-600';
         return 'text-red-600';
     };
 
     const getBarColor = (percentage: number) => {
-        if (percentage >= 80) return 'bg-green-500';
-        if (percentage >= 60) return 'bg-yellow-500';
+        if (percentage >= 70) return 'bg-green-500';
+        if (percentage >= 45) return 'bg-yellow-500';
         return 'bg-red-500';
     };
 

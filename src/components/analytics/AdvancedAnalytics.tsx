@@ -12,6 +12,7 @@ import { SectionHeader } from "./Results";
 import TextStats from "./nlpComponents/TextStats";
 import SentimentSection from "./nlpComponents/SentimentAnalysis";
 import KeywordsSection from "./nlpComponents/KeywordsSection";
+import TopicsSection from "./nlpComponents/TopicsSection";
 
 type AdvancedFeaturesProps = {
     sentiment: SentimentAnalysis;
@@ -37,36 +38,6 @@ const AccordionItem = ({ title, children }: { title: string; children: React.Rea
     );
 };
 
-
-const TopicsSection = ({ data }: { data: TopicModeling }) => (
-    <div className="space-y-4">
-        <div>
-        <h4 className="font-semibold">Primary Topics:</h4>
-        <ul className="list-disc pl-5 space-y-2">
-            {data.primary_topics.map(topic => (
-            <li key={topic.id}>
-                <strong>{topic.name}</strong> — {topic.percentage}%<br />
-                <span className="text-sm text-gray-700">Keywords: {topic.keywords.join(", ")}</span><br />
-                <span className="text-sm text-gray-700">Description: {topic.description}</span>
-            </li>
-            ))}
-        </ul>
-        </div>
-
-        <div>
-        <h4 className="font-semibold">Topic Evolution:</h4>
-        <ul className="list-disc pl-5">
-            {data.topic_evolution.map((evo, i) => (
-            <li key={i}>
-                <strong>{evo.topic}</strong> — Paragraphs {evo.paragraph_range} (Intensity: {(evo.intensity * 100).toFixed(0)}%)
-            </li>
-            ))}
-        </ul>
-        </div>
-
-        <p><strong>Coherence Score:</strong> {data.topic_coherence_score}</p>
-    </div>
-);
 
 const LanguagePatternsSection = ({ data }: { data: LanguagePatterns }) => (
     <div className="space-y-4">
@@ -134,10 +105,6 @@ const ModelFeatures = ({
 
             <AccordionItem title="Language Patterns">
                 <LanguagePatternsSection data={language} />
-            </AccordionItem>
-
-            <AccordionItem title="Text Readability Analysis">
-                <ReadabilitySection data={readability} />
             </AccordionItem>
 
             {textStats && (

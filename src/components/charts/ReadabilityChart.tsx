@@ -12,8 +12,8 @@ const ReadabilityChart = ({ readabilityData }: { readabilityData: ReadabilityMet
         data: Object.values(readabilityData).map(metric => metric.percentage),
         backgroundColor: Object.values(readabilityData).map(metric => {
             const percentage = metric.percentage;
-            if (percentage >= 80) return 'rgba(34, 197, 94, 0.75)'; // Green
-            if (percentage >= 60) return 'rgba(234, 179, 8, 0.75)'; // Yellow
+            if (percentage >= 70) return 'rgba(34, 197, 94, 0.75)'; // Green
+            if (percentage >= 45) return 'rgba(234, 179, 8, 0.75)'; // Yellow
             return 'rgba(239, 68, 68, 0.75)'; // Red
         }),
         borderColor: Object.values(readabilityData).map(metric => {

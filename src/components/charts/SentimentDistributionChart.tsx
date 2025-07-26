@@ -28,13 +28,15 @@ const SentimentDistributionChart = ({ data }: { data: any }) => {
         ]
     }
 
+    const baseOptions = createBarOptions();
+
     const chartOptions =  {
-        ...createBarOptions(),
+        ...baseOptions,
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-            ...createBarOptions().scales,
+            ...baseOptions.scales,
             x: {
                 stacked: true,
                 display: false,
@@ -46,7 +48,7 @@ const SentimentDistributionChart = ({ data }: { data: any }) => {
             }
         },
         plugins: {
-            ...createBarOptions().plugins,
+            ...baseOptions.plugins,
             legend: {
                 display: false
             },

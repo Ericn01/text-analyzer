@@ -60,7 +60,6 @@ const ExecutiveSummary = ({ summary, document }: ExecutiveSummaryType) => {
     )
 }
 
-// New Document Summary Component
 const DocumentSummarySection = ( {documentSummary} : {documentSummary: string}) => {
     return (
         <div className="bg-white border-2 border-[#e0e6ed] rounded-lg p-6 mb-8">
