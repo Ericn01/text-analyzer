@@ -38,7 +38,9 @@ export default function DragDropFileHandler() {
             'application/pdf', 
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
             'text/plain',
-            'text/html'];
+            'text/html',
+            'text/markdown'
+        ];
 
         const maxSize = 10 * 1024 * 1024; // 10MB
         
@@ -49,7 +51,7 @@ export default function DragDropFileHandler() {
             setUploadState(prev => ({
                 ...prev,
                 status: 'error',
-                error: 'File must be PDF, DOCX, TXT, or HTML format'
+                error: 'File must be PDF, DOCX, TXT, Markdown or HTML format'
             }));
             return false;
         } 
@@ -148,7 +150,7 @@ export default function DragDropFileHandler() {
 
                         {uploadState.status === 'idle' && (
                             <p className="text-sm text-white/60">
-                                Supports PDF, DOCX, TXT, and HTML files up to 10MB
+                                Supports PDF, DOCX, TXT, Markdown and HTML files up to 10MB
                             </p>
                         )}
                     </div>
@@ -177,7 +179,7 @@ export default function DragDropFileHandler() {
                         ref={inputRef}
                         type="file"
                         hidden
-                        accept=".pdf,.docx,.txt,.html"
+                        accept=".pdf,.docx,.txt,.html,.md"
                         onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file && validateFile(file)) {

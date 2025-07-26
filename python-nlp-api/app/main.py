@@ -5,6 +5,7 @@ import uvicorn
 
 class TextRequest(BaseModel):
     text: str
+    standard_readability_metrics: dict[str, float]
 
 app = FastAPI()
 
@@ -14,7 +15,7 @@ def analyze_text(req: TextRequest):
         raise HTTPException(status_code=400, detail="File too short for NLP analysis (minimum 100 words).")
     
     nlp = NLPAnalyzer()
-    results = nlp.analyze_text(req.text)
+    results = nlp.analyze_text(req.text, req.standard_readability_metrics)
     return results
 
 if __name__ == "__main__":

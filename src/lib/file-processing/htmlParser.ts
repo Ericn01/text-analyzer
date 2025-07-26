@@ -7,7 +7,6 @@ import { extractStructureHTML } from '../text-analysis/extractStructure';
  * @returns Complete document analysis
  */
 export const parseHTMLDocument = (htmlContent : string) => {
-    console.log(htmlContent);
     // Begin by creating the DOM from the HTML
     const dom = new JSDOM(htmlContent);
     const document = dom.window.document;

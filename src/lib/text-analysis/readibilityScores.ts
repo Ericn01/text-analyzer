@@ -5,7 +5,7 @@ const calculateReadability = (text: string) : ReadabilityMetrics => {
     const fre = rs.fleschReadingEase(text);
     const fk = rs.fleschKincaidGrade(text);
     const smog = rs.smogIndex(text);
-    const automatedReadability = rs.automatedReadabilityIndex(text);
+    const automatedReadability = Math.min(rs.automatedReadabilityIndex(text), 14);
     const daleChall = rs.daleChallReadabilityScore(text); // Based off unfamiliar words
     
     // Lower percentage means more difficult in these scores
@@ -28,7 +28,7 @@ const calculateReadability = (text: string) : ReadabilityMetrics => {
         automated_readability_index: {
             score: Math.round(automatedReadability * 10) / 10,
             description: getAutomatedReadabilityDescription(automatedReadability),
-            percentage: getPercentage(18, 1, automatedReadability)
+            percentage: getPercentage(14, 1, automatedReadability)
         }, 
         dale_chall_formula: {
             score: Math.round(daleChall * 10) / 10,
@@ -88,7 +88,6 @@ function getDaleChallReadabilityDescription(score: number): string {
         return "College graduate reading level";
     }
 }
-
 
 /**
  * Gets description for grade level scores

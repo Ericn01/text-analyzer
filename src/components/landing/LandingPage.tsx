@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 const LandingPage = () => {
 
-    const supportedFormats = ['PDF', 'DOCX', 'TXT', 'HTML']
+    const supportedFormats = ['PDF', 'DOCX', 'TXT', 'HTML', 'MARKDOWN']
     return (
         <section className="flex flex-col justify-center items-center min-h-screen text-center bg-gradient-to-br from-[#667eea] to-[#764ba2]">
             <div className="max-w-[1200px] p-5">

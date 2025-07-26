@@ -51,7 +51,7 @@ class NLPAnalyzer:
         """
         return self.preprocessor.preprocess(text)
 
-    def analyze_text(self, text: str, skip_preprocessing: bool = False) -> Dict[str, Any]:
+    def analyze_text(self, text: str, standard_readability_metrics : dict[str, float], skip_preprocessing: bool = False) -> Dict[str, Any]:
         """
         Main analysis function that returns the complete analysis.
         
@@ -96,7 +96,7 @@ class NLPAnalyzer:
             keyword_extraction = self.keyword_extractor.extract_keywords(text, doc)
             topic_modeling = self.topic_modeler.model_topics(text, sentences, doc)
             language_patterns = self.language_analyzer.analyze_language_patterns(text, sentences, doc)
-            readability_prediction = self.readability_predictor.predict_difficulty(text)
+            readability_prediction = self.readability_predictor.predict_difficulty(text, standard_readability_metrics)
             document_summary = self.document_summarizer.summarize_document(text)
 
             print (sentiment_analysis)

@@ -5,6 +5,7 @@ import path from 'path';
 import { writeFile, unlink } from 'fs/promises';
 import { randomUUID } from 'crypto'; // Add this import
 import convertDocxToHTML from "./docxParser";
+import { parseMarkdownAsHTML } from "./mardownParser";
 
 
 export const processFileContent = async (filePath: string, fileType: string) => {
@@ -20,6 +21,11 @@ export const processFileContent = async (filePath: string, fileType: string) => 
             case 'text/html':
                 const htmlDoc = await fs.readFile(filePath, 'utf8');
                 return parseHTMLDocument(htmlDoc);
+            case 'text/markdown':
+                const markdownContent = await fs.readFile(filePath, 'utf-8');
+                const markdownToHTML = parseMarkdownAsHTML(markdownContent);
+                console.log(markdownToHTML)
+                return parseHTMLDocument(markdownToHTML);
 
             case 'application/pdf':
                 throw new FileProcessingError('PDF analysis not implemented yet', fileType);

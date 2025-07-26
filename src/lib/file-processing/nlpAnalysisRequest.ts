@@ -1,13 +1,16 @@
 import { NLPServiceError } from '@/lib/file-processing/errorProcessing';
 import { config } from './processFileContent';
 import { AdvancedFeatures } from '../../../types/advancedAnalytics';
+import { ReadabilityMetrics } from '../../../types/basicAnalytics';
+
 
 type NLPReqestProps = {
-    nlpAnalysisUrl: string,
-    fullText: string
+    nlpAnalysisUrl: string;
+    fullText: string;
+    readabilityScores?: Record<keyof ReadabilityMetrics, number>;
 }
 
-export const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps) : Promise<AdvancedFeatures> => {
+export const getNLPAnalysis = async ({nlpAnalysisUrl, fullText, readabilityScores}: NLPReqestProps) : Promise<AdvancedFeatures> => {
     const controller = new AbortController();
     const timeoutId = setTimeout( () => controller.abort, config.requestTimeout); 
 
@@ -18,7 +21,7 @@ export const getNLPAnalysis = async ({nlpAnalysisUrl, fullText}: NLPReqestProps)
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({text: fullText}),
+            body: JSON.stringify({text: fullText, standard_readability_metrics : readabilityScores}),
             signal: controller.signal,
         });
 

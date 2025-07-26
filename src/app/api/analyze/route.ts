@@ -9,7 +9,7 @@ import { createTempFile,
         safeCleanup, 
         config } 
 from '@/lib/file-processing/processFileContent';
-import { AnalyticsSummary, DocumentInfo } from '../../../../types/basicAnalytics';
+import { AnalyticsSummary, DocumentInfo, ReadabilityMetrics } from '../../../../types/basicAnalytics';
 
 export async function POST(request: NextRequest) {
     // set temporary file path as null for now
@@ -42,11 +42,20 @@ export async function POST(request: NextRequest) {
 
         // Extract full document text for NLP analysis
         const fullText = parsedDocument.textData.fullText;
-        
+
+        // Readability metrics transformed for NLP analysis
+        const readabilityScores: Record<keyof ReadabilityMetrics, number> = 
+            Object.entries(basic_analytics.readability).reduce((accumulator, [metricName, metricData]) => {
+                if (metricData) accumulator[metricName as keyof ReadabilityMetrics] = metricData.score
+                return accumulator;
+            }, {} as Record<keyof ReadabilityMetrics, number>); 
+
+        console.log(readabilityScores);
         // Perform NLP analysis --> Text pre-processing and application of models
         const nlpAnalysisData = await getNLPAnalysis({
             nlpAnalysisUrl: config.nlpServiceUrl,
-            fullText
+            fullText,
+            readabilityScores
         });  
 
         // Calculate summary fields from existing data
@@ -161,6 +170,8 @@ const getFileCategory = (mimeType: string): string => {
             return 'PDF Document';
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             return 'Word Document';
+        case 'text/markdown':
+            return 'Markdown Document'
         default:
             return 'Unknown';
     }
